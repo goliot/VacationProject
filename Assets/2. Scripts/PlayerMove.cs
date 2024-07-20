@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMove : CreatureState
@@ -26,6 +24,9 @@ public class PlayerMove : CreatureState
 
     private State state;
 
+    [Header("Camera")]
+    public CameraMove cameraMove;  // 카메라 움직임 스크립트를 참조합니다.
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -46,14 +47,11 @@ public class PlayerMove : CreatureState
     {
         if (dir != Vector3.zero)
         {
-            if (Mathf.Sign(transform.forward.x) != Mathf.Sign(dir.x) || Mathf.Sign(transform.forward.z) != Mathf.Sign(dir.z))
-            {
-                transform.Rotate(0, 1, 0);
-            }
-            transform.forward = Vector3.Lerp(transform.forward, dir, rotSpeed * Time.deltaTime);
-        }
+            Quaternion targetRotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
 
-        rb.MovePosition(transform.position + dir * applySpeed * Time.deltaTime);
+            rb.MovePosition(transform.position + dir * applySpeed * Time.deltaTime);
+        }
     }
 
     private void Move()
@@ -64,25 +62,19 @@ public class PlayerMove : CreatureState
 
         if (dir != Vector3.zero)
         {
-            if (Mathf.Sign(transform.forward.x) != Mathf.Sign(dir.x) || Mathf.Sign(transform.forward.z) != Mathf.Sign(dir.z))
-            {
-                transform.Rotate(0, 1, 0);
-            }
-            transform.forward = Vector3.Lerp(transform.forward, dir, rotSpeed * Time.deltaTime);
-
             if (state == State.Temp || state == State.Idle)
                 state = State.Move;
         }
         else
         {
-            if(state != State.Jump)
+            if (state != State.Jump)
                 state = State.Idle;
         }
     }
 
     private void Jump()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && CheckGround())
+        if (Input.GetKeyDown(KeyCode.Space) && CheckGround())
         {
             rb.velocity = Vector3.up * jumpForce;
             if (dir == Vector3.zero)
@@ -132,7 +124,7 @@ public class PlayerMove : CreatureState
 
     private void ChangeAnimation()
     {
-        switch(state)
+        switch (state)
         {
             case State.Temp: //다른 스테이트로 전환을 위한 null 상태
                 break;
