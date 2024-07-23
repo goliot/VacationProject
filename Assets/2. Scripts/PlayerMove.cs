@@ -30,7 +30,7 @@ public class PlayerMove : CreatureState
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        cc = rb.GetComponent<CapsuleCollider>();
+        cc = GetComponent<CapsuleCollider>();
         anim = GetComponent<Animator>();
         applySpeed = walkSpeed;
     }
