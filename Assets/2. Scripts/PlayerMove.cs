@@ -40,6 +40,7 @@ public class PlayerMove : CreatureState
         Move();
         Jump();
         TryRun();
+        TryPunch();
         ChangeAnimation();
     }
 
@@ -67,8 +68,8 @@ public class PlayerMove : CreatureState
         }
         else
         {
-            if (state != State.Jump)
-                state = State.Idle;
+            //if (state != State.Jump)
+                //state = State.Idle;
         }
     }
 
@@ -121,6 +122,14 @@ public class PlayerMove : CreatureState
         applySpeed = walkSpeed;
         state = State.Temp;
     }
+    
+    private void TryPunch()
+    {
+        if(Input.GetKeyDown(KeyCode.Mouse0)) // 마우스 왼쪽
+        {
+            state = State.Punch;
+        }
+    }
 
     private void ChangeAnimation()
     {
@@ -144,6 +153,7 @@ public class PlayerMove : CreatureState
                 anim.Play("JumpWhileRunning");
                 break;
             case State.Punch:
+                anim.Play("PunchRight");
                 break;
             case State.Die:
                 break;

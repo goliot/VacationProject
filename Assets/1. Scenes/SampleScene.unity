@@ -527,6 +527,7 @@ MonoBehaviour:
   crouchSpeed: 0
   jumpForce: 5
   rotSpeed: 10
+  cameraMove: {fileID: 1959891749}
 --- !u!136 &18226086
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1204,6 +1205,7 @@ MonoBehaviour:
   crouchSpeed: 0
   jumpForce: 0
   rotSpeed: 0
+  cameraMove: {fileID: 0}
 --- !u!54 &2015557662
 Rigidbody:
   m_ObjectHideFlags: 0
