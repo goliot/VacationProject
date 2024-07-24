@@ -31,7 +31,7 @@ public class PlayerMove : CreatureState
     [Header("Camera")]
     public CameraMove cameraMove;  // 카메라 움직임 스크립트를 참조합니다.
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         cc = GetComponent<CapsuleCollider>();
@@ -152,6 +152,10 @@ public class PlayerMove : CreatureState
     private void CheckAnimationEnd()
     {
         AnimatorStateInfo animStateInfo = anim.GetCurrentAnimatorStateInfo(0);
+
+        if (animStateInfo.IsName("Jump") || animStateInfo.IsName("JumpWhileRunning"))
+            return;
+
         if(animStateInfo.normalizedTime >= 1.0f && !animStateInfo.loop)
         {
             state = State.Idle;
