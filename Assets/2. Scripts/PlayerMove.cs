@@ -20,9 +20,13 @@ public class PlayerMove : CreatureState
     private Rigidbody rb;
     private CapsuleCollider cc;
     private Animator anim;
+
+    private Vector3 forward;
+    private Vector3 right;
     private Vector3 dir = Vector3.zero;
 
     private State state;
+    private bool isGround;
 
     [Header("Camera")]
     public CameraMove cameraMove;  // 카메라 움직임 스크립트를 참조합니다.
@@ -33,101 +37,124 @@ public class PlayerMove : CreatureState
         cc = GetComponent<CapsuleCollider>();
         anim = GetComponent<Animator>();
         applySpeed = walkSpeed;
+        state = State.Idle;
+        isGround = true;
     }
 
     private void Update()
     {
-        Move();
-        Jump();
-        TryRun();
-        TryPunch();
+        forward = cameraMove.CinemachineCameraTarget.transform.forward;
+        right = cameraMove.CinemachineCameraTarget.transform.right;
+
+        forward.y = 0;
+        right.y = 0;
+
+        forward.Normalize();
+        right.Normalize();
+
+        dir = (forward * Input.GetAxisRaw("Vertical") + right * Input.GetAxisRaw("Horizontal")).normalized;
+
+        switch (state)
+        {
+            case State.Idle:
+                if (dir != Vector3.zero)
+                {
+                    state = State.Move;
+                }
+                else if (Input.GetKeyDown(KeyCode.Space) && isGround)
+                {
+                    state = State.Jump;
+                    Jump();
+                }
+                else if (Input.GetKey(KeyCode.Mouse0))
+                {
+                    state = State.Punch;
+                    Punch();
+                }
+                break;
+            case State.Move:
+                if (dir == Vector3.zero)
+                {
+                    state = State.Idle;
+                }
+                else if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    state = State.Dash;
+                    Dash();
+                }
+                else if (Input.GetKeyDown(KeyCode.Space) && isGround)
+                {
+                    state = State.JumpWhileRun;
+                    Jump();
+                }
+                break;
+            case State.Dash:
+                if (Input.GetKeyDown(KeyCode.Space) && isGround)
+                {
+                    state = State.JumpWhileRun;
+                    Jump();
+                }
+                else if (Input.GetKeyUp(KeyCode.LeftShift))
+                {
+                    state = State.Idle;
+                    DashCancel();
+                }
+                break;
+            case State.Jump:
+                break;
+            case State.JumpWhileRun:
+                break;
+        }
+
+        if(state != State.Idle)
+            CheckAnimationEnd();
         ChangeAnimation();
     }
 
     private void FixedUpdate()
     {
-        if (dir != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
+        Quaternion targetRotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
 
-            rb.MovePosition(transform.position + dir * applySpeed * Time.deltaTime);
-        }
+        rb.MovePosition(transform.position + dir * applySpeed * Time.deltaTime);
     }
 
-    private void Move()
+    private void OnCollisionEnter(Collision collision)
     {
-        dir.x = Input.GetAxisRaw("Horizontal");
-        dir.z = Input.GetAxisRaw("Vertical");
-        dir.Normalize();
-
-        if (dir != Vector3.zero)
+        if(collision.gameObject.tag == "Ground")
         {
-            if (state == State.Temp || state == State.Idle)
-                state = State.Move;
-        }
-        else
-        {
-            //if (state != State.Jump)
-                //state = State.Idle;
+            isGround = true;
+            state = State.Idle;
         }
     }
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && CheckGround())
-        {
-            rb.velocity = Vector3.up * jumpForce;
-            if (dir == Vector3.zero)
-                state = State.Jump;
-            else
-                state = State.JumpWhileRun;
-        }
+        isGround = false;
+        rb.velocity = Vector3.up * jumpForce;
     }
 
-    private bool CheckGround()
-    {
-        return Physics.Raycast(transform.position, Vector3.down, cc.bounds.extents.y + 0.1f);
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag("Ground"))
-        {
-            state = State.Temp;
-        }
-    }
-
-    private void TryRun()
-    {
-        if (Input.GetKey(KeyCode.LeftShift) && dir != Vector3.zero)
-        {
-            Running();
-        }
-
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            RunningCancel();
-        }
-    }
-
-    private void Running()
+    private void Dash()
     {
         applySpeed = runSpeed;
-        state = State.Dash;
     }
 
-    private void RunningCancel()
+    private void DashCancel()
     {
         applySpeed = walkSpeed;
-        state = State.Temp;
     }
     
-    private void TryPunch()
+    private void Punch()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0)) // 마우스 왼쪽
+        //TODO : 공격 로직
+    }
+
+    private void CheckAnimationEnd()
+    {
+        AnimatorStateInfo animStateInfo = anim.GetCurrentAnimatorStateInfo(0);
+        if(animStateInfo.normalizedTime >= 1.0f && !animStateInfo.loop)
         {
-            state = State.Punch;
+            state = State.Idle;
         }
     }
 
@@ -158,5 +185,6 @@ public class PlayerMove : CreatureState
             case State.Die:
                 break;
         }
+        Debug.Log(state);
     }
 }
