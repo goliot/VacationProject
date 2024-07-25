@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Transform[] spawnPoints;
+
+    private float coolTime;
+
+    private void Update()
     {
-        
+        coolTime += Time.deltaTime;
+
+        if(coolTime > GameManager.Instance.spawnTime)
+        {
+            Spawn();
+            coolTime = 0;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Spawn()
     {
-        
+        GameObject obj = GameManager.Instance.pool.Get(0);
+        obj.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length)].position;
     }
 }

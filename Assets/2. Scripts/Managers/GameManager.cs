@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     public PoolManager pool;
     public Spawner spawner;
 
+    [Header("# InGame")]
+    public float spawnTime;
+
     private void Awake()
     {
         if(instance == null)

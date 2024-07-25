@@ -16,7 +16,9 @@ public class PlayerMove : CreatureState
     private float jumpForce;
     [SerializeField]
     private float rotSpeed;
-
+    [SerializeField]
+    private GameObject[] weapons;
+    private int currentWeaponIdx;
     private Rigidbody rb;
     private CapsuleCollider cc;
     private Animator anim;
@@ -25,8 +27,10 @@ public class PlayerMove : CreatureState
     private Vector3 right;
     private Vector3 dir = Vector3.zero;
 
-    private State state;
+    public State state;
     private bool isGround;
+
+    public Stats stat;
 
     [Header("Camera")]
     public CameraMove cameraMove;  // 카메라 움직임 스크립트를 참조합니다.
@@ -39,9 +43,22 @@ public class PlayerMove : CreatureState
         applySpeed = walkSpeed;
         state = State.Idle;
         isGround = true;
+
+        stat = new Stats();
+        stat.atk = 10;
+        stat.speed = walkSpeed;
+        stat.atkSpeed = 1f;
     }
 
     private void Update()
+    {
+        GetInput();
+        if(state != State.Idle)
+            CheckAnimationEnd();
+        ChangeAnimation();
+    }
+
+    private void GetInput()
     {
         forward = cameraMove.CinemachineCameraTarget.transform.forward;
         right = cameraMove.CinemachineCameraTarget.transform.right;
@@ -53,6 +70,9 @@ public class PlayerMove : CreatureState
         right.Normalize();
 
         dir = (forward * Input.GetAxisRaw("Vertical") + right * Input.GetAxisRaw("Horizontal")).normalized;
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            ChangeWeapon();
 
         switch (state)
         {
@@ -66,10 +86,10 @@ public class PlayerMove : CreatureState
                     state = State.Jump;
                     Jump();
                 }
-                else if (Input.GetKey(KeyCode.Mouse0))
+                else if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    state = State.Punch;
-                    Punch();
+                    state = State.Attack;
+                    Attack();
                 }
                 break;
             case State.Move:
@@ -104,11 +124,9 @@ public class PlayerMove : CreatureState
                 break;
             case State.JumpWhileRun:
                 break;
+            case State.Attack:
+                break;
         }
-
-        if(state != State.Idle)
-            CheckAnimationEnd();
-        ChangeAnimation();
     }
 
     private void FixedUpdate()
@@ -116,7 +134,8 @@ public class PlayerMove : CreatureState
         Quaternion targetRotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
 
-        rb.MovePosition(transform.position + dir * applySpeed * Time.deltaTime);
+        if(state != State.Attack)
+            rb.MovePosition(transform.position + dir * applySpeed * Time.deltaTime);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -162,7 +181,7 @@ public class PlayerMove : CreatureState
         }
     }
 
-    private void ChangeAnimation()
+    protected override void ChangeAnimation()
     {
         switch (state)
         {
@@ -172,7 +191,22 @@ public class PlayerMove : CreatureState
                 anim.Play("Idle");
                 break;
             case State.Move:
-                anim.Play("RunForward");
+                if (Input.GetAxisRaw("Vertical") > 0 && Input.GetAxisRaw("Horizontal") > 0)
+                    anim.Play("RunRight");
+                else if (Input.GetAxisRaw("Vertical") > 0 && Input.GetAxisRaw("Horizontal") < 0)
+                    anim.Play("RunLeft");
+                else if (Input.GetAxisRaw("Vertical") > 0 && Input.GetAxisRaw("Horizontal") == 0)
+                    anim.Play("RunForward");
+                else if (Input.GetAxisRaw("Vertical") < 0 && Input.GetAxisRaw("Horizontal") > 0)
+                    anim.Play("RunBackwardRight");
+                else if (Input.GetAxisRaw("Vertical") < 0 && Input.GetAxisRaw("Horizontal") < 0)
+                    anim.Play("RunBackwardLeft");
+                else if (Input.GetAxisRaw("Vertical") < 0 && Input.GetAxisRaw("Horizontal") == 0)
+                    anim.Play("RunBackward");
+                else if (Input.GetAxisRaw("Vertical") == 0 && Input.GetAxisRaw("Horizontal") > 0)
+                    anim.Play("RunRight");
+                else if (Input.GetAxisRaw("Vertical") == 0 && Input.GetAxisRaw("Horizontal") < 0)
+                    anim.Play("RunLeft");
                 break;
             case State.Dash:
                 anim.Play("Sprint");
@@ -183,12 +217,23 @@ public class PlayerMove : CreatureState
             case State.JumpWhileRun:
                 anim.Play("JumpWhileRunning");
                 break;
-            case State.Punch:
-                anim.Play("PunchRight");
+            case State.Attack:
+                Attack();
                 break;
             case State.Die:
                 break;
         }
         Debug.Log(state);
+    }
+
+    private void ChangeWeapon()
+    {
+        weapons[currentWeaponIdx].gameObject.SetActive(false);
+        weapons[++currentWeaponIdx].gameObject.SetActive(true);
+    }
+
+    private void Attack()
+    {
+        anim.Play("MeleeAttack_OneHanded");
     }
 }
