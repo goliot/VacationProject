@@ -29,6 +29,7 @@ public class PlayerMove : CreatureState
 
     public State state;
     private bool isGround;
+    private int attackCount;
 
     public Stats stat;
 
@@ -52,13 +53,13 @@ public class PlayerMove : CreatureState
 
     private void Update()
     {
-        GetInput();
+        StateMachine();
         if(state != State.Idle)
             CheckAnimationEnd();
         ChangeAnimation();
     }
 
-    private void GetInput()
+    protected override void StateMachine()
     {
         forward = cameraMove.CinemachineCameraTarget.transform.forward;
         right = cameraMove.CinemachineCameraTarget.transform.right;
@@ -89,7 +90,6 @@ public class PlayerMove : CreatureState
                 else if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     state = State.Attack;
-                    Attack();
                 }
                 break;
             case State.Move:
@@ -107,6 +107,10 @@ public class PlayerMove : CreatureState
                     state = State.JumpWhileRun;
                     Jump();
                 }
+                else if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    state = State.Attack;
+                }
                 break;
             case State.Dash:
                 if (Input.GetKeyDown(KeyCode.Space) && isGround)
@@ -118,6 +122,10 @@ public class PlayerMove : CreatureState
                 {
                     state = State.Idle;
                     DashCancel();
+                }
+                else if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    state = State.Attack;
                 }
                 break;
             case State.Jump:
@@ -168,16 +176,31 @@ public class PlayerMove : CreatureState
         //TODO : 공격 로직
     }
 
-    private void CheckAnimationEnd()
+    protected override void CheckAnimationEnd()
     {
         AnimatorStateInfo animStateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
         if (animStateInfo.IsName("Jump") || animStateInfo.IsName("JumpWhileRunning"))
+        {
+            //anim.Play("FallingLoop");
             return;
+        }
 
-        if(animStateInfo.normalizedTime >= 1.0f && !animStateInfo.loop)
+        if(animStateInfo.IsName("OneHand_Up_Attack_1") && Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            anim.Play("OneHand_Up_Attack_2");
+            Debug.Log("Combo1");    
+        }
+        if(animStateInfo.IsName("OneHand_Up_Attack_2") && Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            anim.Play("OneHand_Up_Attack_3");
+            Debug.Log("Combo2");
+        }
+
+        if (animStateInfo.normalizedTime >= 1.0f && !animStateInfo.loop)
         {
             state = State.Idle;
+            attackCount = 0;
         }
     }
 
@@ -234,6 +257,6 @@ public class PlayerMove : CreatureState
 
     private void Attack()
     {
-        anim.Play("MeleeAttack_OneHanded");
+        anim.Play("OneHand_Up_Attack_1");
     }
 }

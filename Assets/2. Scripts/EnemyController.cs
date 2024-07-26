@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEditor.SceneView;
 
 public class EnemyController : CreatureState
 {
@@ -18,11 +19,14 @@ public class EnemyController : CreatureState
     // 몬스터가 플레이어를 추적할 거리
     public float chaseDistance = 10f;
 
+    // 몬스터와 플레이어의 거리
+    private float distanceToPlayer;
+
     // 몬스터의 초기 위치를 저장할 변수
     private Vector3 startPosition;
 
     // 몬스터가 플레이어를 추적할 최소 거리
-    public float stopDistance = 2f;
+    public float stopDistance = 3f;
 
     // 몬스터가 정찰할 위치 배열
     public Transform[] patrolPoints;
@@ -34,7 +38,7 @@ public class EnemyController : CreatureState
         navAgent = GetComponent<NavMeshAgent>();
     }
 
-    void Start()
+    private void Start()
     {
         // Player 태그를 가진 오브젝트를 찾아서 플레이어로 설정
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -43,10 +47,15 @@ public class EnemyController : CreatureState
         startPosition = transform.position;
     }
 
-    void Update()
+    private void OnEnable()
+    {
+        state = State.Idle;
+    }
+
+    private void Update()
     {
         // 플레이어와의 거리를 계산
-        float distanceToPlayer = Vector3.Distance(player.position, transform.position);
+        distanceToPlayer = Vector3.Distance(player.position, transform.position);
 
         // 플레이어가 추적 거리 안에 있을 경우
         if (distanceToPlayer <= chaseDistance)
@@ -58,9 +67,51 @@ public class EnemyController : CreatureState
         {
             // 정찰 지점으로 이동
             //Patrol();
+            state = State.Idle;
         }
 
+        StateMachine();
+        CheckAnimationEnd();
         ChangeAnimation();
+    }
+
+    protected override void StateMachine()
+    {
+        /*switch (state)
+        {
+            case State.Idle:
+                if (distanceToPlayer <= chaseDistance)
+                {
+                    state = State.Move;
+                }
+                else if (distanceToPlayer <= stopDistance)
+                {
+                    state = State.Attack;
+                    Attack();
+                }
+                break;
+            case State.Move:
+                if(distanceToPlayer <= stopDistance)
+                {
+                    state = State.Attack;
+                    Attack();
+                }
+                else
+                {
+                    state = State.Idle;
+                }
+                break;
+            case State.Attack:
+                if (distanceToPlayer <= chaseDistance) 
+                {
+                    state = State.Move;
+                }
+                else
+                {
+                    state = State.Idle;
+                }
+                break;
+        }*/
     }
 
     // 플레이어를 추적하는 함수
@@ -80,6 +131,11 @@ public class EnemyController : CreatureState
             navAgent.SetDestination(player.position);
             state = State.Move;
         }
+
+        // 항상 플레이어를 바라보도록 설정
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(directionToPlayer.x, 0, directionToPlayer.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
     // 정찰하는 함수
@@ -100,6 +156,19 @@ public class EnemyController : CreatureState
         {
             if(other.GetComponent<WeaponManager>().player.state == State.Attack)
                 Debug.Log("Melee" + other.GetComponent<WeaponManager>().atk);
+        }
+    }
+
+    protected override void CheckAnimationEnd()
+    {
+        AnimatorStateInfo animStateInfo = anim.GetCurrentAnimatorStateInfo(0);
+
+        if (animStateInfo.IsName("Jump") || animStateInfo.IsName("JumpWhileRunning"))
+            return;
+
+        if (animStateInfo.normalizedTime >= 1.0f && !animStateInfo.loop)
+        {
+            state = State.Idle;
         }
     }
 
@@ -134,6 +203,6 @@ public class EnemyController : CreatureState
 
     private void Attack()
     {
-        anim.Play("Punch");
+        anim.Play("PunchRight");
     }
 }

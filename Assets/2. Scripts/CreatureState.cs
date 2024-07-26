@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreatureState : MonoBehaviour
+public abstract class CreatureState : MonoBehaviour
 {
     public enum State
     {
@@ -17,10 +17,11 @@ public class CreatureState : MonoBehaviour
         Die
     }
 
-    protected virtual void ChangeAnimation()
-    {
+    protected abstract void StateMachine();
 
-    }
+    protected abstract void ChangeAnimation();
+
+    protected abstract void CheckAnimationEnd();
 }
 
 [Serializable]
