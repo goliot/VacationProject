@@ -154,7 +154,7 @@ public class EnemyController : CreatureState
     {
         if(other.gameObject.tag == "Melee")
         {
-            if(other.GetComponent<WeaponManager>().player.state == State.Attack)
+            //if(other.GetComponent<WeaponManager>().player.state == State.Attack)
                 Debug.Log("Melee" + other.GetComponent<WeaponManager>().atk);
         }
     }

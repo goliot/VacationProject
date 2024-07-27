@@ -22,6 +22,7 @@ public class PlayerMove : CreatureState
     private Rigidbody rb;
     private CapsuleCollider cc;
     private Animator anim;
+    private PlayerAnimator playerAnimator;
 
     private Vector3 forward;
     private Vector3 right;
@@ -41,6 +42,7 @@ public class PlayerMove : CreatureState
         rb = GetComponent<Rigidbody>();
         cc = GetComponent<CapsuleCollider>();
         anim = GetComponent<Animator>();
+        playerAnimator = GetComponent<PlayerAnimator>();
         applySpeed = walkSpeed;
         state = State.Idle;
         isGround = true;
@@ -139,10 +141,11 @@ public class PlayerMove : CreatureState
 
     private void FixedUpdate()
     {
-        Quaternion targetRotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
+        //Quaternion targetRotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
+        //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
 
-        if(state != State.Attack)
+        if (state != State.Attack)
             rb.MovePosition(transform.position + dir * applySpeed * Time.deltaTime);
     }
 
@@ -178,11 +181,12 @@ public class PlayerMove : CreatureState
 
     protected override void CheckAnimationEnd()
     {
-        AnimatorStateInfo animStateInfo = anim.GetCurrentAnimatorStateInfo(0);
+        /*AnimatorStateInfo animStateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
         if (animStateInfo.IsName("Jump") || animStateInfo.IsName("JumpWhileRunning"))
         {
-            //anim.Play("FallingLoop");
+            if(!isGround)
+                anim.Play("FallingLoop");
             return;
         }
 
@@ -201,7 +205,7 @@ public class PlayerMove : CreatureState
         {
             state = State.Idle;
             attackCount = 0;
-        }
+        }*/
     }
 
     protected override void ChangeAnimation()
@@ -211,10 +215,11 @@ public class PlayerMove : CreatureState
             case State.Temp: //다른 스테이트로 전환을 위한 null 상태
                 break;
             case State.Idle:
-                anim.Play("Idle");
+                //anim.Play("Idle");
+                playerAnimator.OnMovement(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
                 break;
             case State.Move:
-                if (Input.GetAxisRaw("Vertical") > 0 && Input.GetAxisRaw("Horizontal") > 0)
+                /*if (Input.GetAxisRaw("Vertical") > 0 && Input.GetAxisRaw("Horizontal") > 0)
                     anim.Play("RunRight");
                 else if (Input.GetAxisRaw("Vertical") > 0 && Input.GetAxisRaw("Horizontal") < 0)
                     anim.Play("RunLeft");
@@ -229,13 +234,15 @@ public class PlayerMove : CreatureState
                 else if (Input.GetAxisRaw("Vertical") == 0 && Input.GetAxisRaw("Horizontal") > 0)
                     anim.Play("RunRight");
                 else if (Input.GetAxisRaw("Vertical") == 0 && Input.GetAxisRaw("Horizontal") < 0)
-                    anim.Play("RunLeft");
+                    anim.Play("RunLeft");*/
+                playerAnimator.OnMovement(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
                 break;
             case State.Dash:
                 anim.Play("Sprint");
                 break;
             case State.Jump:
-                anim.Play("Jump");
+                //anim.Play("Jump");
+                playerAnimator.OnJump();
                 break;
             case State.JumpWhileRun:
                 anim.Play("JumpWhileRunning");
@@ -251,12 +258,21 @@ public class PlayerMove : CreatureState
 
     private void ChangeWeapon()
     {
+        // TODO : Animation Controll
         weapons[currentWeaponIdx].gameObject.SetActive(false);
         weapons[++currentWeaponIdx].gameObject.SetActive(true);
     }
 
     private void Attack()
     {
-        anim.Play("OneHand_Up_Attack_1");
+        //anim.Play("OneHand_Up_Attack_1");
+        playerAnimator.OnAttack();
+        //Invoke("ToIdle", 0.6f);
+    }
+
+    public void ToIdle()
+    {
+        state = State.Idle;
+        Debug.Log("ToIdle");
     }
 }

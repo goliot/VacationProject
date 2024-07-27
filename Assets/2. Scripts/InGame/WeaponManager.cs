@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WeaponManager : MonoBehaviour
 {
-    public PlayerMove player;
+    public PlayerController player;
 
     public float atk;
 
