@@ -8,6 +8,9 @@ public class PlayerAnimator : MonoBehaviour
     [NonSerialized]
     public Animator animator;
 
+    [SerializeField]
+    private GameObject attackCollisionBox;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -32,5 +35,10 @@ public class PlayerAnimator : MonoBehaviour
     public void OnComboAttack()
     {
         animator.SetTrigger("OnWeaponAttack");
+    }
+
+    public void OnAttackCollision()
+    {
+        attackCollisionBox.SetActive(true);
     }
 }

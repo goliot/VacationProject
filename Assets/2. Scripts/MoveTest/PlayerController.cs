@@ -56,7 +56,6 @@ public class PlayerController : MonoBehaviour
         GetInput();
     }
 
-
     private void GetInput()
     {
         forward = cameraMove.CinemachineCameraTarget.transform.forward;
