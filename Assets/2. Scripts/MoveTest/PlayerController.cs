@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
     private int currentWeaponIdx;
     private Rigidbody rb;
     private CapsuleCollider cc;
-    private Animator anim;
     private PlayerAnimator playerAnimator;
 
     private Vector3 forward;
@@ -40,7 +39,6 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         cc = GetComponent<CapsuleCollider>();
-        anim = GetComponent<Animator>();
         playerAnimator = GetComponent<PlayerAnimator>();
         applySpeed = walkSpeed;
         isGround = true;

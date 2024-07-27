@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEditor.SceneView;
 
 public class EnemyController : MonoBehaviour
 {
@@ -46,7 +43,7 @@ public class EnemyController : MonoBehaviour
         startPosition = transform.position;
     }
 
-    /*private void Update()
+    private void Update()
     {
         // 플레이어와의 거리를 계산
         distanceToPlayer = Vector3.Distance(player.position, transform.position);
@@ -61,8 +58,9 @@ public class EnemyController : MonoBehaviour
         {
             // 정찰 지점으로 이동
             //Patrol();
+            animator.SetBool("isMove", false);
         }
-    }*/
+    }
 
     // 플레이어를 추적하는 함수
     void ChasePlayer(float distanceToPlayer)
@@ -72,12 +70,14 @@ public class EnemyController : MonoBehaviour
         {
             // 멈춘다
             navAgent.isStopped = true;
+            animator.SetBool("isMove", false);
         }
         else
         {
             // 플레이어를 따라간다
             navAgent.isStopped = false;
             navAgent.SetDestination(player.position);
+            animator.SetBool("isMove", true);
         }
 
         // 항상 플레이어를 바라보도록 설정

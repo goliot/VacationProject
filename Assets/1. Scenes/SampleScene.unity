@@ -2662,6 +2662,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 0f8dcba50db5895499fd4694a81baaa2, type: 2}
+    - target: {fileID: 7842489633370182599, guid: ebedda28524f09e4d9b5bdcb492a9e9e, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5488,6 +5492,7 @@ MonoBehaviour:
   BottomClamp: -30
   CameraAngleOverride: 0
   LockCameraPosition: 0
+  _mouseSensitivity: 300
 --- !u!1 &1966725064 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1997155511221508917, guid: dd17fd1a98fbfb14f9385eff652c80fe, type: 3}

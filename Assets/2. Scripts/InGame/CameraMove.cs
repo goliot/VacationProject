@@ -20,6 +20,7 @@ public class CameraMove : MonoBehaviour
 
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
+    [SerializeField]
     private float _mouseSensitivity = 300f;
     private Quaternion _previousRotation;
     private Vector2 _input;
