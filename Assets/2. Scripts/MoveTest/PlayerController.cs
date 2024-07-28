@@ -1,52 +1,74 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Xml;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("# Speed")]
-    [SerializeField]
-    private float walkSpeed;
-    [SerializeField]
-    private float runSpeed;
     private float applySpeed;
-    [SerializeField]
-    private float crouchSpeed;
     [SerializeField]
     private float jumpForce;
     [SerializeField]
     private float rotSpeed;
+
     [SerializeField]
     private GameObject[] weapons;
     private int currentWeaponIdx;
+
     private Rigidbody rb;
     private CapsuleCollider cc;
     private PlayerAnimator playerAnimator;
-
     private Vector3 forward;
     private Vector3 right;
     private Vector3 dir = Vector3.zero;
-
     private bool isGround;
-    private int attackCount;
 
-    public Stats stat;
+    string xmlFileName = "PlayerData";
+
+    public PlayerData playerData;
 
     [Header("Camera")]
-    public CameraMove cameraMove;  // ƒ´∏ﬁ∂Û øÚ¡˜¿” Ω∫≈©∏≥∆Æ∏¶ ¬¸¡∂«’¥œ¥Ÿ.
+    public CameraMove cameraMove;  // Ïπ¥Î©îÎùº ÏõÄÏßÅÏûÑ Ïä§ÌÅ¨Î¶ΩÌä∏Î•º Ï∞∏Ï°∞Ìï©ÎãàÎã§.
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         cc = GetComponent<CapsuleCollider>();
         playerAnimator = GetComponent<PlayerAnimator>();
-        applySpeed = walkSpeed;
-        isGround = true;
+    }
 
-        stat = new Stats();
-        stat.atk = 10;
-        stat.speed = walkSpeed;
-        stat.atkSpeed = 1f;
+    private void Start()
+    {
+        LoadXML(xmlFileName);
+        applySpeed = playerData.speed;
+        isGround = true;
+    }
+
+    private void LoadXML(string fileName)
+    {
+        TextAsset txtAsset = (TextAsset)Resources.Load(fileName);
+        if (txtAsset == null)
+        {
+            Debug.LogError("Failed to load XML file: " + fileName);
+            return;
+        }
+
+        XmlDocument xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(txtAsset.text);
+
+        XmlNodeList all_nodes = xmlDoc.SelectNodes("root/Sheet1");
+        foreach (XmlNode node in all_nodes)
+        {
+            playerData = new PlayerData();
+
+            playerData.health = float.Parse(node.SelectSingleNode("health").InnerText);
+            playerData.maxHealth = playerData.health;
+            playerData.speed = float.Parse(node.SelectSingleNode("speed").InnerText);
+            playerData.attack = float.Parse(node.SelectSingleNode("attack").InnerText);
+            playerData.attackRange = float.Parse(node.SelectSingleNode("attackRange").InnerText);
+            playerData.attackSpeed = float.Parse(node.SelectSingleNode("attackSpeed").InnerText);
+        }
     }
 
     private void Update()
@@ -102,6 +124,7 @@ public class PlayerController : MonoBehaviour
         if(playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
             rb.MovePosition(transform.position + dir * applySpeed * Time.deltaTime);
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Ground")
@@ -116,15 +139,15 @@ public class PlayerController : MonoBehaviour
         rb.velocity = Vector3.up * jumpForce;
         playerAnimator.OnJump();
     }
-
+    
     private void Dash()
     {
-        applySpeed = runSpeed;
+        applySpeed = playerData.speed * 2;
     }
 
     private void DashCancel()
     {
-        applySpeed = walkSpeed;
+        applySpeed = playerData.speed;
     }
 
     private void Attack()

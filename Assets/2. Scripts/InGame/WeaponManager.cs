@@ -10,6 +10,6 @@ public class WeaponManager : MonoBehaviour
 
     private void Start()
     {
-        atk = player.stat.atk;
+        //atk = player.stat.atk;
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Not Used
 public class PlayerMove : CreatureState
 {
     [Header("# Speed")]
@@ -32,8 +33,6 @@ public class PlayerMove : CreatureState
     private bool isGround;
     private int attackCount;
 
-    public Stats stat;
-
     [Header("Camera")]
     public CameraMove cameraMove;  // 카메라 움직임 스크립트를 참조합니다.
 
@@ -46,11 +45,6 @@ public class PlayerMove : CreatureState
         applySpeed = walkSpeed;
         state = State.Idle;
         isGround = true;
-
-        stat = new Stats();
-        stat.atk = 10;
-        stat.speed = walkSpeed;
-        stat.atkSpeed = 1f;
     }
 
     private void Update()

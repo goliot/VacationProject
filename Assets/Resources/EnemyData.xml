@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<Sheet1>
+		<mobType>0</mobType>
+		<health>100</health>
+		<speed>5</speed>
+		<attack>10</attack>
+		<attackRange>1</attackRange>
+		<attackSpeed>1</attackSpeed>
+	</Sheet1>
+</root>

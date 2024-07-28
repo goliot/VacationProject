@@ -23,13 +23,3 @@ public abstract class CreatureState : MonoBehaviour
 
     protected abstract void CheckAnimationEnd();
 }
-
-[Serializable]
-public class Stats
-{
-    public float health;
-    public float maxHealth;
-    public float speed;
-    public float atk;
-    public float atkSpeed;
-}
