@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 right;
     private Vector3 dir = Vector3.zero;
     private int jumpCount;
+    private bool isDead;
 
     string xmlFileName = "PlayerData";
 
@@ -43,6 +44,7 @@ public class PlayerController : MonoBehaviour
         LoadXML(xmlFileName);
         applySpeed = playerData.speed;
         jumpCount = 2;
+        isDead = false;
     }
 
     private void LoadXML(string fileName)
@@ -117,6 +119,8 @@ public class PlayerController : MonoBehaviour
     {
         //Quaternion targetRotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
         //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
+        if (isDead) return;
+
         transform.rotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
 
         if (playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("Movement") ||
@@ -177,5 +181,8 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         // TODO : 죽음, 게임 오버
+        isDead = true;
+        playerAnimator.Die();
+        cc.enabled = false;
     }
 }

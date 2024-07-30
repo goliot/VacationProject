@@ -16,6 +16,16 @@ public class PlayerAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    public void StopAnim()
+    {
+        animator.speed = 0;
+    }
+
+    public void ResumeAnim()
+    {
+        animator.speed = 1;
+    }
+
     public void OnMovement(float horizontal, float vertical)
     {
         animator.SetFloat("Horizontal", horizontal);
@@ -45,5 +55,10 @@ public class PlayerAnimator : MonoBehaviour
     public void OnHit()
     {
         animator.SetTrigger("OnHit");
+    }
+
+    public void Die()
+    {
+        animator.SetTrigger("OnDead");
     }
 }
