@@ -598,6 +598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 012dce0d6a5c57f4db49dff0b8be4a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 193550401041775546}
 --- !u!1 &92054336 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2876794282426128809, guid: dd17fd1a98fbfb14f9385eff652c80fe, type: 3}
@@ -8426,6 +8427,10 @@ PrefabInstance:
     - target: {fileID: 5332658410995249287, guid: a9192f5ad22e05741b9d72c8e1fd3117, type: 3}
       propertyPath: m_Name
       value: Enemy_Male_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5332658410995249287, guid: a9192f5ad22e05741b9d72c8e1fd3117, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

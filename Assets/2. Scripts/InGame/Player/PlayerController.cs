@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 forward;
     private Vector3 right;
     private Vector3 dir = Vector3.zero;
-    private bool isGround;
+    private int jumpCount;
 
     string xmlFileName = "PlayerData";
 
@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     {
         LoadXML(xmlFileName);
         applySpeed = playerData.speed;
-        isGround = true;
+        jumpCount = 2;
     }
 
     private void LoadXML(string fileName)
@@ -101,8 +101,7 @@ public class PlayerController : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            if(isGround)
-                Jump();
+            Jump();
         }
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -116,12 +115,13 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"));
         //Quaternion targetRotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
         //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
         transform.rotation = Quaternion.Euler(0, cameraMove.CinemachineCameraTarget.transform.rotation.eulerAngles.y, 0);
 
-        if(playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("Movement"))
+        if (playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("Movement") ||
+            playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("2Hand-Sword-Jump-Flip") ||
+            playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("2Hand-Sword-Jump"))
             rb.MovePosition(transform.position + dir * applySpeed * Time.deltaTime);
     }
 
@@ -129,15 +129,17 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground")
         {
-            isGround = true;
+            jumpCount = 2;
         }
     }
 
     private void Jump()
     {
-        isGround = false;
+        if (jumpCount <= 0) return;
+
         rb.velocity = Vector3.up * jumpForce;
         playerAnimator.OnJump();
+        jumpCount--;
     }
     
     private void Dash()
@@ -158,5 +160,22 @@ public class PlayerController : MonoBehaviour
     private void ComboAttack()
     {
         playerAnimator.OnComboAttack();
+    }
+
+
+    public void TakeDamage(float damage)
+    {
+        playerAnimator.OnHit();
+        playerData.health -= damage;
+
+        if(playerData.health < 0 )
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        // TODO : 죽음, 게임 오버
     }
 }

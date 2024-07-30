@@ -41,4 +41,9 @@ public class PlayerAnimator : MonoBehaviour
     {
         attackCollisionBox.SetActive(true);
     }
+
+    public void OnHit()
+    {
+        animator.SetTrigger("OnHit");
+    }
 }

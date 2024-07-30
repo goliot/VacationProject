@@ -1,9 +1,12 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttackCollision : MonoBehaviour
+public class EnemyAttackCollision : MonoBehaviour
 {
+    [SerializeField]
+    private EnemyController enemyController;
+
     private void OnEnable()
     {
         StartCoroutine(AutoDisable());
@@ -11,9 +14,9 @@ public class PlayerAttackCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Player"))
         {
-            other.GetComponent<EnemyController>().TakeDamage(10);
+            other.GetComponent<PlayerController>().TakeDamage(enemyController.enemyData.attack);
         }
     }
 

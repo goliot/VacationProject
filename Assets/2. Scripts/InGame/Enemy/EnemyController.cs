@@ -11,8 +11,10 @@ public class EnemyController : MonoBehaviour
     private Transform player;
 
     [Header("# Chase")]
-    public float chaseDistance = 10f;
-    public float stopDistance = 3f;
+    [SerializeField]
+    private float chaseDistance = 10f;
+    [SerializeField]
+    private float stopDistance = 3f;
     private float distanceToPlayer;
     private Vector3 startPosition;
 
@@ -23,6 +25,10 @@ public class EnemyController : MonoBehaviour
     private float patrolDelay = 2f;
     private bool isPatrolling = false;
     private bool isChasing = false;
+
+    [Header("# AttackCollision")]
+    [SerializeField]
+    private GameObject meleeAttackCollison;
 
     private Coroutine patrolCoroutine;
 
@@ -69,10 +75,11 @@ public class EnemyController : MonoBehaviour
 
     void ChasePlayer(float distanceToPlayer)
     {
-        if (distanceToPlayer <= stopDistance)
+        if (distanceToPlayer <= enemyData.attackRange)
         {
             navAgent.isStopped = true;
             animator.SetBool("isMove", false);
+            animator.SetTrigger("OnAttack");
         }
         else
         {
@@ -134,5 +141,10 @@ public class EnemyController : MonoBehaviour
     {
         Debug.Log("Hit " + damage);
         animator.SetTrigger("OnHit");
+    }
+
+    public void OnAttackCollision()
+    {
+        meleeAttackCollison.SetActive(true);
     }
 }
