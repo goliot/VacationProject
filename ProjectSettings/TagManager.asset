@@ -8,6 +8,7 @@ TagManager:
   - Melee
   - Enemy
   - CheckPoint
+  - Minion
   layers:
   - Default
   - TransparentFX

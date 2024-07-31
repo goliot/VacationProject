@@ -8,7 +8,8 @@ public class Spawner : MonoBehaviour
     // Spawner spawns Enemy
     public Transform[] redSpawnPoints;
     public Transform[] blueSpawnPoints;
-    public Transform finalPoint;
+    public Transform blueFinalPoint; // 블루팀의 목표
+    public Transform redFinalPoint; // 레드팀의 목표
     public Transform checkPointL;
     public Transform checkPointR;
 
@@ -58,10 +59,10 @@ public class Spawner : MonoBehaviour
             Spawn(0, true, false);
         for (int i = 0; i < 6; i++)
             Spawn(0, true, true);
-        /*for(int i = 0; i < 3; i++)
+        for(int i = 0; i < 3; i++)
             Spawn(1, false, false);
         for(int i = 0; i < 3; i++)
-            Spawn(1, false, true);*/
+            Spawn(1, false, true);
     }
 
     private void Spawn(int idx, bool isRed, bool isLeft)
@@ -69,7 +70,7 @@ public class Spawner : MonoBehaviour
         GameObject obj = GameManager.Instance.pool.Get(idx);
         if (isRed) //red team ai
         {
-            obj.GetComponent<EnemyController>().finalPoint = finalPoint;
+            obj.GetComponent<EnemyController>().finalPoint = redFinalPoint;
             obj.GetComponent<EnemyController>().Init(enemyDatas[idx]);
             if (isLeft)
             {
@@ -84,7 +85,19 @@ public class Spawner : MonoBehaviour
         }
         else // blue team ai
         {
-
+            // TODO : 아군 데이터와 분리
+            obj.GetComponent<EnemyController>().finalPoint = blueFinalPoint;
+            obj.GetComponent<EnemyController>().Init(enemyDatas[0]); // TODO : 데이터 추가하고 idx로 바꾸기
+            if (isLeft)
+            {
+                obj.GetComponent<EnemyController>().checkPoint = checkPointR;
+                obj.transform.position = blueSpawnPoints[0].position; //Left Red spawn
+            }
+            else
+            {
+                obj.GetComponent<EnemyController>().checkPoint = checkPointL;
+                obj.transform.position = blueSpawnPoints[1].position; //Right Red spawn
+            }
         }
     }
 }

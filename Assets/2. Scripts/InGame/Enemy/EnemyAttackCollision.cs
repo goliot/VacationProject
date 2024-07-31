@@ -18,6 +18,10 @@ public class EnemyAttackCollision : MonoBehaviour
         {
             other.GetComponent<PlayerController>().TakeDamage(enemyController.enemyData.attack);
         }
+        else if(other.CompareTag("Minion"))
+        {
+            other.GetComponent<EnemyController>().TakeDamage(enemyController.enemyData.attack);
+        }
     }
 
     private IEnumerator AutoDisable()

@@ -98,7 +98,11 @@ public class EnemyController : MonoBehaviour
     {
         GameObject closestBlue = null;
         float tempDistance = float.MaxValue;
-        var overlapColliders = Physics.OverlapSphere(transform.position, chaseDistance, LayerMask.GetMask("Blue", "Player"));
+        Collider[] overlapColliders;
+        if (gameObject.tag == "Enemy")
+            overlapColliders = Physics.OverlapSphere(transform.position, chaseDistance, LayerMask.GetMask("Blue", "Player"));
+        else
+            overlapColliders = Physics.OverlapSphere(transform.position, chaseDistance, LayerMask.GetMask("Red"));
 
         if(overlapColliders != null && overlapColliders.Length > 0)
         {
