@@ -6,7 +6,11 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     // Spawner spawns Enemy
-    public Transform[] spawnPoints;
+    public Transform[] redSpawnPoints;
+    public Transform[] blueSpawnPoints;
+    public Transform finalPoint;
+    public Transform checkPointL;
+    public Transform checkPointR;
 
     private List<EnemyData> enemyDatas = new List<EnemyData>();
     private float coolTime;
@@ -16,6 +20,7 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         LoadXML(xmlFileName);
+        InvokeRepeating("SpawnLoop", 0f, 60f);
     }
 
     private void LoadXML(string fileName)
@@ -47,21 +52,39 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void SpawnLoop()
     {
-        coolTime += Time.deltaTime;
-
-        if(coolTime > GameManager.Instance.spawnTime)
-        {
-            Spawn(0);
-            coolTime = 0;
-        }
+        for (int i = 0; i < 6; i++)
+            Spawn(0, true, false);
+        for (int i = 0; i < 6; i++)
+            Spawn(0, true, true);
+        /*for(int i = 0; i < 3; i++)
+            Spawn(1, false, false);
+        for(int i = 0; i < 3; i++)
+            Spawn(1, false, true);*/
     }
 
-    private void Spawn(int idx)
+    private void Spawn(int idx, bool isRed, bool isLeft)
     {
         GameObject obj = GameManager.Instance.pool.Get(idx);
-        obj.GetComponent<EnemyController>().Init(enemyDatas[idx]);
-        obj.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length)].position;
+        if (isRed) //red team ai
+        {
+            obj.GetComponent<EnemyController>().finalPoint = finalPoint;
+            obj.GetComponent<EnemyController>().Init(enemyDatas[idx]);
+            if (isLeft)
+            {
+                obj.GetComponent<EnemyController>().checkPoint = checkPointL;
+                obj.transform.position = redSpawnPoints[0].position; //Left Red spawn
+            }
+            else
+            {
+                obj.GetComponent<EnemyController>().checkPoint = checkPointR;
+                obj.transform.position = redSpawnPoints[1].position; //Right Red spawn
+            }
+        }
+        else // blue team ai
+        {
+
+        }
     }
 }

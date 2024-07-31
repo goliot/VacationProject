@@ -17,20 +17,22 @@ public class EnemyController : MonoBehaviour
     private float stopDistance = 3f;
     private float distanceToPlayer;
     private Vector3 startPosition;
-
-    [Header("# Patrol")]
-    [SerializeField]
-    private float patrolRadius = 20f;
-    [SerializeField]
-    private float patrolDelay = 2f;
-    private bool isPatrolling = false;
-    private bool isChasing = false;
+    private GameObject chaseTarget;
 
     [Header("# AttackCollision")]
     [SerializeField]
     private GameObject meleeAttackCollison;
 
-    private Coroutine patrolCoroutine;
+    [Header("# Destination")]
+    [SerializeField]
+    public Transform checkPoint;
+    [SerializeField]
+    public Transform finalPoint;
+
+    private bool isCheckPoint; // 체크포인트에 도달했는지 여부
+
+    Coroutine toCheckPoint = null;
+    Coroutine toFinalPoint = null;
 
     private void Awake()
     {
@@ -42,7 +44,7 @@ public class EnemyController : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         startPosition = transform.position;
-        StartPatrolling();
+        isCheckPoint = false;
     }
 
     public void Init(EnemyData data)
@@ -52,7 +54,8 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        distanceToPlayer = Vector3.Distance(player.position, transform.position);
+        //todo : patrol 갖다 버리고 루트 따라서 가는걸로
+        /*distanceToPlayer = Vector3.Distance(player.position, transform.position);
 
         if (distanceToPlayer <= chaseDistance)
         {
@@ -70,12 +73,51 @@ public class EnemyController : MonoBehaviour
                 isChasing = false;
                 StartPatrolling();
             }
+        }*/
+
+        chaseTarget = CheckEnemy();
+        if (chaseTarget != null)
+        {
+            StopAllCoroutines();
+            Chase(chaseTarget);
+        }
+        if(!isCheckPoint && toCheckPoint == null)
+        {
+            toCheckPoint = StartCoroutine(ToCheckPoint());
+        }
+        if(isCheckPoint && toFinalPoint == null)
+        {
+            if(toCheckPoint != null)
+                StopCoroutine(toCheckPoint);
+
+            toFinalPoint = StartCoroutine(ToFinalPoint());
         }
     }
 
-    void ChasePlayer(float distanceToPlayer)
+    private GameObject CheckEnemy()
     {
-        if (distanceToPlayer <= enemyData.attackRange)
+        GameObject closestBlue = null;
+        float tempDistance = float.MaxValue;
+        var overlapColliders = Physics.OverlapSphere(transform.position, chaseDistance, LayerMask.GetMask("Blue", "Player"));
+
+        if(overlapColliders != null && overlapColliders.Length > 0)
+        {
+            foreach(var collider in overlapColliders)
+            {
+                if(tempDistance > Vector3.Distance(transform.position, collider.transform.position))
+                {
+                    closestBlue = collider.gameObject;
+                    tempDistance = Vector3.Distance(transform.position, collider.transform.position);
+                }
+            }
+        }
+
+        return closestBlue;
+    }
+
+    private void Chase(GameObject target)
+    {
+        if(Vector3.Distance(target.transform.position, transform.position) <= enemyData.attackRange)
         {
             navAgent.isStopped = true;
             animator.SetBool("isMove", false);
@@ -93,47 +135,31 @@ public class EnemyController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
-    IEnumerator Patrol()
+    IEnumerator ToCheckPoint() // 중간 분기점 지점으로
     {
-        isPatrolling = true;
+        navAgent.isStopped = false;
+        navAgent.SetDestination(checkPoint.position);
 
-        while (isPatrolling)
+        animator.SetBool("isMove", true);
+
+        while(navAgent.pathPending || navAgent.remainingDistance > navAgent.stoppingDistance || !isCheckPoint)
         {
-            Vector3 randomDirection = Random.insideUnitSphere * patrolRadius;
-            randomDirection += startPosition;
-
-            NavMeshHit navHit;
-            NavMesh.SamplePosition(randomDirection, out navHit, patrolRadius, -1);
-
-            navAgent.SetDestination(navHit.position);
-            animator.SetBool("isMove", true);
-
-            while (navAgent.pathPending || navAgent.remainingDistance > navAgent.stoppingDistance)
-            {
-                yield return null;
-            }
-
-            animator.SetBool("isMove", false);
-            yield return new WaitForSeconds(patrolDelay);
+            yield return null;
         }
+
+        isCheckPoint = true;
     }
 
-    void StartPatrolling()
+    IEnumerator ToFinalPoint()
     {
-        if (patrolCoroutine == null)
-        {
-            patrolCoroutine = StartCoroutine(Patrol());
-        }
-    }
+        navAgent.isStopped = false;
+        navAgent.SetDestination(finalPoint.position);
 
-    void StopPatrolling()
-    {
-        if (patrolCoroutine != null)
+        animator.SetBool("isMove", true);
+
+        while (navAgent.pathPending || navAgent.remainingDistance > navAgent.stoppingDistance)
         {
-            StopCoroutine(patrolCoroutine);
-            patrolCoroutine = null;
-            animator.SetBool("isMove", false);
-            navAgent.isStopped = true;
+            yield return null;
         }
     }
 
@@ -146,5 +172,11 @@ public class EnemyController : MonoBehaviour
     public void OnAttackCollision()
     {
         meleeAttackCollison.SetActive(true);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "CheckPoint")
+            isCheckPoint = true;
     }
 }

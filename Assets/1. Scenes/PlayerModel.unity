@@ -1156,7 +1156,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8764101109581105262, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_RootOrder
@@ -1212,11 +1212,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -5756974303926048370, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -5569093123499596486, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4883342117431397336, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
@@ -1224,7 +1224,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4216026461418558001, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4181038958800656822, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
@@ -1236,7 +1236,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -3080164689260149911, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -2622169200141638033, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
@@ -1244,11 +1244,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -883200726313966593, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -831578292693473596, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -242110432138116277, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
@@ -1256,11 +1256,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -107636477417362491, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7936480654141050, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Name
@@ -1276,11 +1276,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3321362354168505282, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3634093671863165333, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4352061766238186200, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
@@ -1292,7 +1292,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7615259593980660809, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8451469656429240796, guid: 45f944a4396b0a54398eb1abe6743296, type: 3}
       propertyPath: m_Enabled
@@ -1463,41 +1463,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshes:
   - type: hair
-    idx: 0
+    idx: 1
     list:
     - {fileID: 743368086}
     - {fileID: 743368085}
   - type: head
-    idx: 0
+    idx: 1
     list:
     - {fileID: 743368084}
     - {fileID: 743368083}
   - type: beard
-    idx: 0
+    idx: 1
     list:
     - {fileID: 743368082}
     - {fileID: 743368081}
   - type: helmet
-    idx: 1
+    idx: 0
     list:
     - {fileID: 743368080}
     - {fileID: 743368079}
   - type: body
-    idx: 1
+    idx: 0
     list:
     - {fileID: 743368078}
     - {fileID: 743368077}
     - {fileID: 743368076}
     - {fileID: 743368075}
   - type: boots
-    idx: 1
+    idx: 0
     list:
     - {fileID: 743368074}
     - {fileID: 743368073}
     - {fileID: 743368072}
     - {fileID: 743368071}
   - type: cape
-    idx: 1
+    idx: 0
     list:
     - {fileID: 743368070}
     - {fileID: 743368069}
@@ -1509,7 +1509,7 @@ MonoBehaviour:
     - {fileID: 743368066}
     - {fileID: 743368065}
   - type: legs
-    idx: 1
+    idx: 3
     list:
     - {fileID: 743368064}
     - {fileID: 743368063}
@@ -1611,7 +1611,7 @@ MonoBehaviour:
   doubleSidedGI: 0
   renderQueue: 2000
   preview: 0
-  time: 0
+  time: 8357.094
   duplicateMaterial: 0
 --- !u!1 &922129321
 GameObject:
