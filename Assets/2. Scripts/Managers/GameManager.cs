@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,6 +24,14 @@ public class GameManager : MonoBehaviour
     [Header("# InGame")]
     public float spawnTime;
 
+    [Header("# CaptureSlider")]
+    public Slider redSlider;
+    public Slider blueSlider;
+
+    [Header("# CaptureZone")]
+    public CaptureZoneController redCaptureZone;
+    public CaptureZoneController blueCaptureZone;
+
     private void Awake()
     {
         if(instance == null)
@@ -34,5 +43,11 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Update()
+    {
+        redSlider.value = redCaptureZone.GetComponent<CaptureZoneController>().redCaptureValue;
+        blueSlider.value = blueCaptureZone.GetComponent<CaptureZoneController>().blueCaptureValue;
     }
 }

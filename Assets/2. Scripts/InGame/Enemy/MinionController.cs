@@ -115,6 +115,8 @@ public class MinionController : MonoBehaviour
         {
             foreach(var collider in overlapColliders)
             {
+                if (collider.gameObject.tag != "Minion" || collider.gameObject.tag != "Player")
+                    continue;
                 if(tempDistance > Vector3.Distance(transform.position, collider.transform.position))
                 {
                     closestBlue = collider.gameObject;
