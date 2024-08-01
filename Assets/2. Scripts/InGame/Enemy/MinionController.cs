@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
+public class MinionController : MonoBehaviour
 {
     public EnemyData enemyData = new EnemyData();
 
@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour
     private float stopDistance = 3f;
     private float distanceToPlayer;
     private Vector3 startPosition;
-    private GameObject chaseTarget;
+    public GameObject chaseTarget;
 
     [Header("# AttackCollision")]
     [SerializeField]
@@ -38,6 +38,7 @@ public class EnemyController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         navAgent = GetComponent<NavMeshAgent>();
+        navAgent.isStopped = true;
     }
 
     private void Start()
@@ -80,8 +81,9 @@ public class EnemyController : MonoBehaviour
         {
             StopAllCoroutines();
             Chase(chaseTarget);
+            return;
         }
-        if(!isCheckPoint && toCheckPoint == null)
+        /*if(!isCheckPoint && toCheckPoint == null)
         {
             toCheckPoint = StartCoroutine(ToCheckPoint());
         }
@@ -91,18 +93,23 @@ public class EnemyController : MonoBehaviour
                 StopCoroutine(toCheckPoint);
 
             toFinalPoint = StartCoroutine(ToFinalPoint());
-        }
+        }*/
+        if (!isCheckPoint)
+            ToCheckPoint();
+        else
+            ToFinalPoint();
     }
 
-    private GameObject CheckEnemy()
+    private GameObject CheckEnemy() //타겟 찾는거 분리좀 하자
     {
         GameObject closestBlue = null;
         float tempDistance = float.MaxValue;
         Collider[] overlapColliders;
-        if (gameObject.tag == "Enemy")
+        if (gameObject.layer == 9)
             overlapColliders = Physics.OverlapSphere(transform.position, chaseDistance, LayerMask.GetMask("Blue", "Player"));
-        else
+        else if (gameObject.layer == 8)
             overlapColliders = Physics.OverlapSphere(transform.position, chaseDistance, LayerMask.GetMask("Red"));
+        else return null;
 
         if(overlapColliders != null && overlapColliders.Length > 0)
         {
@@ -130,16 +137,16 @@ public class EnemyController : MonoBehaviour
         else
         {
             navAgent.isStopped = false;
-            navAgent.SetDestination(player.position);
+            navAgent.SetDestination(target.transform.position);
             animator.SetBool("isMove", true);
         }
 
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(directionToPlayer.x, 0, directionToPlayer.z));
+        Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(directionToTarget.x, 0, directionToTarget.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
-    IEnumerator ToCheckPoint() // 중간 분기점 지점으로
+    /*IEnumerator ToCheckPoint() // 중간 분기점 지점으로
     {
         navAgent.isStopped = false;
         navAgent.SetDestination(checkPoint.position);
@@ -157,7 +164,7 @@ public class EnemyController : MonoBehaviour
     IEnumerator ToFinalPoint()
     {
         navAgent.isStopped = false;
-        navAgent.SetDestination(finalPoint.position);
+        navAgent.SetDestination(finalPoint.position); //어디가노?
 
         animator.SetBool("isMove", true);
 
@@ -165,12 +172,37 @@ public class EnemyController : MonoBehaviour
         {
             yield return null;
         }
+    }*/
+
+    private void ToCheckPoint()
+    {
+        navAgent.isStopped = false;
+        navAgent.SetDestination(checkPoint.position);
+        animator.SetBool("isMove", true);
+    }
+
+    private void ToFinalPoint()
+    {
+        navAgent.isStopped = false;
+        navAgent.SetDestination(finalPoint.position);
+        animator.SetBool("isMove", true);
     }
 
     public void TakeDamage(float damage)
     {
         Debug.Log("Hit " + damage);
         animator.SetTrigger("OnHit");
+
+        enemyData.health -= damage;
+        if(enemyData.health < 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        GameManager.Instance.pool.Release(gameObject);
     }
 
     public void OnAttackCollision()

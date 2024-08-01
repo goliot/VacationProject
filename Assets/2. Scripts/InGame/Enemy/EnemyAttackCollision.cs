@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyAttackCollision : MonoBehaviour
 {
     [SerializeField]
-    private EnemyController enemyController;
+    private MinionController minionController;
 
     private void OnEnable()
     {
@@ -16,11 +16,11 @@ public class EnemyAttackCollision : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerController>().TakeDamage(enemyController.enemyData.attack);
+            other.GetComponent<PlayerController>().TakeDamage(minionController.enemyData.attack);
         }
         else if(other.CompareTag("Minion"))
         {
-            other.GetComponent<EnemyController>().TakeDamage(enemyController.enemyData.attack);
+            other.GetComponent<MinionController>().TakeDamage(minionController.enemyData.attack);
         }
     }
 

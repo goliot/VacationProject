@@ -14,9 +14,9 @@ public class PlayerAttackCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Minion"))
         {
-            other.GetComponent<EnemyController>().TakeDamage(playerController.playerData.attack);
+            other.GetComponent<MinionController>().TakeDamage(playerController.playerData.attack);
         }
     }
 

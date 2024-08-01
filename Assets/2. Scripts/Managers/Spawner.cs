@@ -4,8 +4,7 @@ using System.Xml;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
-{
-    // Spawner spawns Enemy
+{ // 미니언 스폰 역할
     public Transform[] redSpawnPoints;
     public Transform[] blueSpawnPoints;
     public Transform blueFinalPoint; // 블루팀의 목표
@@ -14,14 +13,14 @@ public class Spawner : MonoBehaviour
     public Transform checkPointR;
 
     private List<EnemyData> enemyDatas = new List<EnemyData>();
-    private float coolTime;
+    private float coolTime = 60f;
 
     string xmlFileName = "EnemyData";
 
     private void Start()
     {
         LoadXML(xmlFileName);
-        InvokeRepeating("SpawnLoop", 0f, 60f);
+        InvokeRepeating("SpawnLoop", 0f, coolTime);
     }
 
     private void LoadXML(string fileName)
@@ -70,34 +69,38 @@ public class Spawner : MonoBehaviour
         GameObject obj = GameManager.Instance.pool.Get(idx);
         if (isRed) //red team ai
         {
-            obj.GetComponent<EnemyController>().finalPoint = redFinalPoint;
-            obj.GetComponent<EnemyController>().Init(enemyDatas[idx]);
+            obj.GetComponent<MinionController>().finalPoint = redFinalPoint;
+            obj.GetComponent<MinionController>().Init(enemyDatas[idx]);
             if (isLeft)
             {
-                obj.GetComponent<EnemyController>().checkPoint = checkPointL;
+                obj.GetComponent<MinionController>().checkPoint = checkPointL;
                 obj.transform.position = redSpawnPoints[0].position; //Left Red spawn
             }
             else
             {
-                obj.GetComponent<EnemyController>().checkPoint = checkPointR;
+                obj.GetComponent<MinionController>().checkPoint = checkPointR;
                 obj.transform.position = redSpawnPoints[1].position; //Right Red spawn
             }
         }
         else // blue team ai
         {
             // TODO : 아군 데이터와 분리
-            obj.GetComponent<EnemyController>().finalPoint = blueFinalPoint;
-            obj.GetComponent<EnemyController>().Init(enemyDatas[0]); // TODO : 데이터 추가하고 idx로 바꾸기
+            obj.GetComponent<MinionController>().finalPoint = blueFinalPoint;
+            obj.GetComponent<MinionController>().Init(enemyDatas[0]); // TODO : 데이터 추가하고 idx로 바꾸기
             if (isLeft)
             {
-                obj.GetComponent<EnemyController>().checkPoint = checkPointR;
-                obj.transform.position = blueSpawnPoints[0].position; //Left Red spawn
+                obj.GetComponent<MinionController>().checkPoint = checkPointR;
+                obj.transform.position = blueSpawnPoints[0].position; //Left Blue spawn
+                Debug.Log(obj.transform.position + " to " + blueSpawnPoints[0].position);
             }
             else
             {
-                obj.GetComponent<EnemyController>().checkPoint = checkPointL;
-                obj.transform.position = blueSpawnPoints[1].position; //Right Red spawn
+                obj.GetComponent<MinionController>().checkPoint = checkPointL;
+                obj.transform.position = blueSpawnPoints[1].position; //Right Blue spawn
             }
         }
+
+        obj.SetActive(true); // 초기화가 완료되기 전에 navAgent가 실행되는 것을 막기 위한 코드
+        // 비활성화된 프리팹을 풀링으로 가져와 모든 초기화를 마친 후 활성화시키는 것
     }
 }

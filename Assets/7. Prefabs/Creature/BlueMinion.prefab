@@ -1621,11 +1621,11 @@ GameObject:
   - component: {fileID: 4934420941484723326}
   m_Layer: 8
   m_Name: BlueMinion
-  m_TagString: Player
+  m_TagString: Minion
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4462549736920368504
 Transform:
   m_ObjectHideFlags: 0
@@ -1664,7 +1664,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 0f8dcba50db5895499fd4694a81baaa2, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -1694,6 +1694,7 @@ MonoBehaviour:
     attackSpeed: 0
   chaseDistance: 10
   stopDistance: 3
+  chaseTarget: {fileID: 0}
   meleeAttackCollison: {fileID: 4403797895981974346}
   checkPoint: {fileID: 0}
   finalPoint: {fileID: 0}
@@ -2072,7 +2073,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f4c6b684820f7246b68a49aa5ec75e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyController: {fileID: 5437588473310660023}
+  minionController: {fileID: 5437588473310660023}
 --- !u!1 &4454300018673833725
 GameObject:
   m_ObjectHideFlags: 0
