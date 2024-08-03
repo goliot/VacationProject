@@ -8,15 +8,12 @@ public class MinionController : MonoBehaviour
 
     private Animator animator;
     private NavMeshAgent navAgent;
-    private Transform player;
 
     [Header("# Chase")]
     [SerializeField]
     private float chaseDistance = 10f;
     [SerializeField]
     private float stopDistance = 3f;
-    private float distanceToPlayer;
-    private Vector3 startPosition;
     public GameObject chaseTarget;
 
     [Header("# AttackCollision")]
@@ -30,9 +27,7 @@ public class MinionController : MonoBehaviour
     public Transform finalPoint;
 
     private bool isCheckPoint; // 체크포인트에 도달했는지 여부
-
-    Coroutine toCheckPoint = null;
-    Coroutine toFinalPoint = null;
+    private bool isDead;
 
     private void Awake()
     {
@@ -43,9 +38,8 @@ public class MinionController : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        startPosition = transform.position;
         isCheckPoint = false;
+        isDead = false;
     }
 
     public void Init(EnemyData data)
@@ -55,26 +49,8 @@ public class MinionController : MonoBehaviour
 
     private void Update()
     {
-        //todo : patrol 갖다 버리고 루트 따라서 가는걸로
-        /*distanceToPlayer = Vector3.Distance(player.position, transform.position);
-
-        if (distanceToPlayer <= chaseDistance)
-        {
-            if (!isChasing)
-            {
-                isChasing = true;
-                StopPatrolling();
-            }
-            ChasePlayer(distanceToPlayer);
-        }
-        else
-        {
-            if (isChasing)
-            {
-                isChasing = false;
-                StartPatrolling();
-            }
-        }*/
+        if (isDead)
+            return;
 
         chaseTarget = CheckEnemy();
         if (chaseTarget != null)
@@ -83,17 +59,7 @@ public class MinionController : MonoBehaviour
             Chase(chaseTarget);
             return;
         }
-        /*if(!isCheckPoint && toCheckPoint == null)
-        {
-            toCheckPoint = StartCoroutine(ToCheckPoint());
-        }
-        if(isCheckPoint && toFinalPoint == null)
-        {
-            if(toCheckPoint != null)
-                StopCoroutine(toCheckPoint);
 
-            toFinalPoint = StartCoroutine(ToFinalPoint());
-        }*/
         if (!isCheckPoint)
             ToCheckPoint();
         else
@@ -102,12 +68,12 @@ public class MinionController : MonoBehaviour
 
     private GameObject CheckEnemy() //타겟 찾는거 분리좀 하자
     {
-        GameObject closestBlue = null;
+        GameObject target = null;
         float tempDistance = float.MaxValue;
         Collider[] overlapColliders;
-        if (gameObject.layer == 9)
+        if (gameObject.layer == 9) // red minion
             overlapColliders = Physics.OverlapSphere(transform.position, chaseDistance, LayerMask.GetMask("Blue", "Player"));
-        else if (gameObject.layer == 8)
+        else if (gameObject.layer == 8) // blue minion
             overlapColliders = Physics.OverlapSphere(transform.position, chaseDistance, LayerMask.GetMask("Red"));
         else return null;
 
@@ -115,17 +81,15 @@ public class MinionController : MonoBehaviour
         {
             foreach(var collider in overlapColliders)
             {
-                if (collider.gameObject.tag != "Minion" || collider.gameObject.tag != "Player")
-                    continue;
                 if(tempDistance > Vector3.Distance(transform.position, collider.transform.position))
                 {
-                    closestBlue = collider.gameObject;
+                    target = collider.gameObject;
                     tempDistance = Vector3.Distance(transform.position, collider.transform.position);
                 }
             }
         }
 
-        return closestBlue;
+        return target;
     }
 
     private void Chase(GameObject target)
@@ -147,34 +111,6 @@ public class MinionController : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(directionToTarget.x, 0, directionToTarget.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
-
-    /*IEnumerator ToCheckPoint() // 중간 분기점 지점으로
-    {
-        navAgent.isStopped = false;
-        navAgent.SetDestination(checkPoint.position);
-
-        animator.SetBool("isMove", true);
-
-        while(navAgent.pathPending || navAgent.remainingDistance > navAgent.stoppingDistance || !isCheckPoint)
-        {
-            yield return null;
-        }
-
-        isCheckPoint = true;
-    }
-
-    IEnumerator ToFinalPoint()
-    {
-        navAgent.isStopped = false;
-        navAgent.SetDestination(finalPoint.position); //어디가노?
-
-        animator.SetBool("isMove", true);
-
-        while (navAgent.pathPending || navAgent.remainingDistance > navAgent.stoppingDistance)
-        {
-            yield return null;
-        }
-    }*/
 
     private void ToCheckPoint()
     {
@@ -204,6 +140,16 @@ public class MinionController : MonoBehaviour
 
     private void Die()
     {
+        isDead = true;
+        StartCoroutine(CoDie());
+    }
+
+    IEnumerator CoDie()
+    {
+        animator.SetTrigger("OnDead");
+
+        yield return new WaitForSeconds(3f);
+
         GameManager.Instance.pool.Release(gameObject);
     }
 

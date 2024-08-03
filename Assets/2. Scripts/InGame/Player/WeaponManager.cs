@@ -2,14 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponManager : MonoBehaviour
+public class WeaponManager : MonoBehaviour // 로비에서 장비 고르면, 거기에 따른 장비가 활성화되도록
 {
-    public PlayerController player;
+    private static WeaponManager instance = null;
 
-    public float atk;
+    public GameObject WeaponNextStage;
 
-    private void Start()
+    public static WeaponManager Instance
     {
-        //atk = player.stat.atk;
+        get
+        {
+            if (instance == null)
+                return null;
+            return instance;
+        }
     }
+
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
 }

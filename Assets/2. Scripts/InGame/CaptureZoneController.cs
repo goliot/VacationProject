@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,9 @@ public class CaptureZoneController : MonoBehaviour
 {
     public float captureRate = 0.05f;
 
+    [NonSerialized]
     public float redCaptureValue = 0f;
+    [NonSerialized]
     public float blueCaptureValue = 0f;
 
     private bool isInRedZone = false;
@@ -14,30 +17,8 @@ public class CaptureZoneController : MonoBehaviour
     private int inRedZoneCount = 0;
     private int inBlueZoneCount = 0;
 
-    Coroutine blueCoroutine;
-    Coroutine redCoroutine;
-
     private void Update()
     {
-        /*if(isInBlueZone && blueCoroutine == null)
-        {
-            blueCoroutine = StartCoroutine(CoBlueValueUpdate());
-        }
-        if (!isInBlueZone && blueCoroutine != null)
-        {
-            StopCoroutine(blueCoroutine);
-            blueCoroutine = null;
-        }
-
-        if(isInRedZone && redCoroutine == null)
-        {
-            redCoroutine = StartCoroutine(CoRedValueUpdate());
-        }
-        if(!isInRedZone && redCoroutine != null)
-        {
-            StopCoroutine(redCoroutine);
-            redCoroutine = null;
-        }*/
         // 블루 팀 점령 게이지 증가
         if (isInBlueZone)
         {
@@ -50,22 +31,6 @@ public class CaptureZoneController : MonoBehaviour
         {
             redCaptureValue += captureRate * Time.deltaTime;
             redCaptureValue = Mathf.Clamp(redCaptureValue, 0, 100); // 0에서 100 사이로 제한
-        }
-    }
-    IEnumerator CoBlueValueUpdate()
-    {
-        while (true)
-        {
-            blueCaptureValue += captureRate;
-            yield return new WaitForSeconds(1f);
-        }
-    }
-    IEnumerator CoRedValueUpdate()
-    {
-        while(true)
-        {
-            redCaptureValue += captureRate;
-            yield return new WaitForSeconds(1f);
         }
     }
 
