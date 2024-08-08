@@ -3657,6 +3657,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 4bee2f0e3b5d41743b7e73cefacffd2b, type: 2}
     - target: {fileID: 1411923676384570589, guid: a6707695d45d43844a001c8a9eb66267, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411923676384570589, guid: a6707695d45d43844a001c8a9eb66267, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}

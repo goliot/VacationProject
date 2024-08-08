@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
 
         if (playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("Movement") ||
             playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("2Hand-Sword-Jump-Flip") ||
-            playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("2Hand-Sword-Jump"))
+            playerAnimator.animator.GetCurrentAnimatorStateInfo(0).IsName("RollForward"))
             rb.MovePosition(transform.position + dir * applySpeed * Time.deltaTime);
     }
 
@@ -141,9 +141,12 @@ public class PlayerController : MonoBehaviour
     {
         if (jumpCount <= 0) return;
 
-        rb.velocity = Vector3.up * jumpForce;
+        //rb.velocity = forward * jumpForce * 3;
+        rb.AddForce(forward * jumpForce * 3, ForceMode.Impulse);
+        //applySpeed = playerData.speed * 2;
+
         playerAnimator.OnJump();
-        jumpCount--;
+        //jumpCount--;
     }
     
     private void Dash()
