@@ -7,5 +7,5 @@ using UnityEngine;
 /// </summary>
 public abstract class ItemEffect : ScriptableObject
 {
-    public abstract bool ExecuteRole(); //여기에 효과 구현
+    public abstract void ExecuteRole(); //여기에 효과 구현
 }

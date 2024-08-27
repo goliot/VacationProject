@@ -4,32 +4,41 @@ using UnityEngine;
 
 public class Inventory : DraggableUI
 {
-    #region Singleton
     public static Inventory instance;
-    #endregion
+
     // 아이템 목록을 저장할 리스트
     public List<string> items = new List<string>();
     public Slot[] slots;
     public Transform slotHolder;
 
-    private int slotCnt;
-    public int SlotCnt
-    {
-        get => slotCnt;
-        set
-        {
-            slotCnt = value;
-        }
-    }
-
     private void Start()
     {
+        instance = this;
         slots = slotHolder.GetComponentsInChildren<Slot>();
+    }
+
+    private void OnEnable()
+    {
+        int idx = 0;
+
+        foreach(Slot slot in slots)
+        {
+            slot.slotNum = idx;
+            idx++;
+        }
     }
 
     public void Init()
     {
+        int idx = 0;
         // TODO : 현재 플레이어가 가진 아이템들을 불러오기
+        PlayerItems playerItems = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerItems>();
+        foreach(KeyValuePair<Item, int> item in playerItems.items)
+        {
+            // TODO: 인벤토리에 넣기
+            slots[idx].item = item.Key;
+            slots[idx].UpdateSlotUI();
+        }
     }
 
     // 아이템 추가 메서드
