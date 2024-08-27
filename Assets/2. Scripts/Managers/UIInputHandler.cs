@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIInputHandler : MonoBehaviour
 {
@@ -8,6 +9,11 @@ public class UIInputHandler : MonoBehaviour
 
     private void OnGUI()
     {
+        if (SceneManager.GetActiveScene().name == "Lobby" || SceneManager.GetActiveScene().name == "Loading")
+        {
+            return;
+        }
+
         Event e = Event.current;
         if (e.isKey && e.type == EventType.KeyDown && e.keyCode == KeyCode.I)
         {
