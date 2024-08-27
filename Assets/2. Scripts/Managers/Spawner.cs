@@ -66,7 +66,7 @@ public class Spawner : MonoBehaviour
 
     private void Spawn(int idx, bool isRed, bool isLeft)
     {
-        GameObject obj = GameManager.Instance.pool.Get(idx);
+        GameObject obj = InGameManager.Instance.pool.Get(idx);
         if (isRed) //red team ai
         {
             obj.GetComponent<MinionController>().finalPoint = redFinalPoint;

@@ -150,7 +150,7 @@ public class MinionController : MonoBehaviour
 
         yield return new WaitForSeconds(3f);
 
-        GameManager.Instance.pool.Release(gameObject);
+        InGameManager.Instance.pool.Release(gameObject);
     }
 
     public void OnAttackCollision()

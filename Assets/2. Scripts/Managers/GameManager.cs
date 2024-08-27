@@ -1,45 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance = null;
+    public static GameManager Instance => instance;
 
-    public static GameManager Instance
-    {
-        get
-        {
-            if (instance == null)
-                return null;
-            return instance;
-        }
-    }
-
-    [Header("# ObjectPool")]
-    public PoolManager pool;
-    public Spawner spawner;
-
-    [Header("# InGame")]
-    public float spawnTime;
-
-    [Header("# CaptureSlider")]
-    public Slider redSlider;
-    public Slider blueSlider;
-
-    [Header("# CaptureZone")]
-    public CaptureZoneController redCaptureZone;
-    public CaptureZoneController blueCaptureZone;
+    public UIManager uiManager;
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        redSlider.value = redCaptureZone.GetComponent<CaptureZoneController>().redCaptureValue;
-        blueSlider.value = blueCaptureZone.GetComponent<CaptureZoneController>().blueCaptureValue;
+        UIInputHandler.OnInventoryPressed += OpenInventory;
+        UIInputHandler.OnClosePressed += CloseUI;
+    }
+
+    private void OnDisable()
+    {
+        UIInputHandler.OnInventoryPressed -= OpenInventory;
+        UIInputHandler.OnClosePressed -= CloseUI;
+    }
+
+    private void OpenInventory()
+    {
+        uiManager.Inventory();
+    }
+
+    private void CloseUI()
+    {
+        uiManager.CloseUI();
     }
 }
