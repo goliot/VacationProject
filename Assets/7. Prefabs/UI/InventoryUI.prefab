@@ -547,6 +547,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   items: []
+  slots: []
+  slotHolder: {fileID: 429047642252561027}
 --- !u!225 &-260176463239780213
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -627,7 +629,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -0.000030517578, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 1460}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &8642999921244286073
 MonoBehaviour:

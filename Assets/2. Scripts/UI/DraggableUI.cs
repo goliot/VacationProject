@@ -7,7 +7,6 @@ public abstract class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandl
     private CanvasGroup canvasGroup;
     private Canvas canvas;
     private Vector2 dragOffset;
-    private int originalSortingOrder; // 원래의 sortingOrder 저장
 
     protected virtual void Awake()
     {
@@ -34,9 +33,7 @@ public abstract class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandl
         );
         dragOffset = rectTransform.anchoredPosition - localPointerPos;
 
-        // Canvas의 sortingOrder를 증가시켜서 UI를 가장 위로 이동
-        originalSortingOrder = canvas.sortingOrder; // 원래 sortingOrder 저장
-        canvas.sortingOrder += 1; // sortingOrder 증가
+        rectTransform.SetAsLastSibling(); // 가장 위로 이동
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -61,12 +58,6 @@ public abstract class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (canvasGroup != null)
         {
             canvasGroup.blocksRaycasts = true; // 충돌 방지 해제
-        }
-
-        // 원래의 sortingOrder로 복원
-        if (canvas != null)
-        {
-            canvas.sortingOrder = originalSortingOrder;
         }
     }
 }
