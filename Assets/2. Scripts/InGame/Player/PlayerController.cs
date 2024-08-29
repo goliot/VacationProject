@@ -97,23 +97,34 @@ public class PlayerController : MonoBehaviour
         {
             Dash();
         }
-        if(Input.GetKeyUp(KeyCode.LeftShift))
+        if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             DashCancel();
         }
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Jump();
         }
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+
+        // UI가 클릭되지 않았을 때만 공격 수행
+        if (!IsPointerOverUI())
         {
-            Attack();
-        }
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            ComboAttack();
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                Attack();
+            }
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                ComboAttack();
+            }
         }
     }
+
+    private bool IsPointerOverUI()
+    {
+        return UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
+    }
+
 
     private void FixedUpdate()
     {

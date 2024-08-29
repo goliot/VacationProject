@@ -38,7 +38,7 @@ public class UIManager : MonoBehaviour
         GameObject createdInventory = Instantiate(inventoryPrefab, canvas);
         uiStack.Push(createdInventory);
         uiSet.Add(createdInventory);
-        createdInventory.GetComponent<Inventory>().Init(); // 인벤토리 초기화
+        createdInventory.GetComponent<Inventory>().UpdateInventoryUI(); // 인벤토리 초기화
     }
 
     public void CloseUI()

@@ -23,14 +23,15 @@ public class Item : MonoBehaviour
         if (itemEffect != null)
         {
             itemEffect.ExecuteRole(); // 아이템 효과 실행
+            GameManager.Instance.player.GetComponent<PlayerItems>().RemoveItem(this);
         }
     }
 
     public bool Use()
     {
-        if(itemType != ItemType.Consumable)
+        if (itemType != ItemType.Consumable)
             return false;
-        else 
+        else
         {
             return true;
         }
@@ -38,10 +39,27 @@ public class Item : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player")
         {
             other.GetComponent<PlayerItems>().InsertItem(this);
             gameObject.SetActive(false);
         }
     }
+
+    // Equals 메서드 재정의
+    public override bool Equals(object obj)
+    {
+        if (obj is Item item)
+        {
+            return itemName == item.itemName && itemType == item.itemType;
+        }
+        return false;
+    }
+
+    // GetHashCode 메서드 재정의
+    public override int GetHashCode()
+    {
+        return (itemName, itemType).GetHashCode();
+    }
 }
+
