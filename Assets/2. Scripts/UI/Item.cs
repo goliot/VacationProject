@@ -4,7 +4,12 @@ using UnityEngine;
 
 public enum ItemType
 {
-    Equipment,
+    Weapon,
+    Armor,
+    Glove,
+    Ring,
+    Shoe,
+    Helmet,
     Consumable,
     Etc,
 }
@@ -13,6 +18,7 @@ public enum ItemType
 public class Item : MonoBehaviour
 {
     public ItemType itemType;
+    public bool isEquipped = false;
     public string itemName;
     public Sprite itemImage;
     public ItemEffect itemEffect;  // 여기에 ScriptableObject를 할당
@@ -20,21 +26,27 @@ public class Item : MonoBehaviour
     // 아이템을 사용하는 메서드
     public void UseItem()
     {
-        if (itemEffect != null)
+        PlayerItems playerItems = GameManager.Instance.player.GetComponent<PlayerItems>();
+
+        if (itemType == ItemType.Consumable)
         {
-            itemEffect.ExecuteRole(); // 아이템 효과 실행
-            GameManager.Instance.player.GetComponent<PlayerItems>().RemoveItem(this);
+            if (itemEffect != null)
+            {
+                itemEffect.ExecuteRole(); // 아이템 효과 실행
+                playerItems.RemoveItem(this);
+            }
+        }
+        else if (IsInEquipmentRange(itemType))
+        {
+            isEquipped = true;
+            playerItems.equipments[itemType] = this;
         }
     }
 
+    // Consumable 아이템인지 확인하는 메서드
     public bool Use()
     {
-        if (itemType != ItemType.Consumable)
-            return false;
-        else
-        {
-            return true;
-        }
+        return itemType == ItemType.Consumable;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -61,5 +73,14 @@ public class Item : MonoBehaviour
     {
         return (itemName, itemType).GetHashCode();
     }
-}
 
+    // ItemType이 Equipment 범위에 있는지 확인하는 메서드
+    public static bool IsInEquipmentRange(ItemType itemType)
+    {
+        return itemType switch
+        {
+            ItemType.Weapon or ItemType.Armor or ItemType.Glove or ItemType.Ring or ItemType.Shoe or ItemType.Helmet => true,
+            _ => false
+        };
+    }
+}

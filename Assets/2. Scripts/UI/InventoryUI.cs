@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : DraggableUI
+public class InventoryUI : DraggableUI
 {
-    public static Inventory instance;
+    public static InventoryUI instance;
 
     public Slot[] slots;
     public Transform slotHolder;
@@ -13,15 +13,16 @@ public class Inventory : DraggableUI
     private void Start()
     {
         instance = this;
-        slots = slotHolder.GetComponentsInChildren<Slot>();
     }
 
     private void OnEnable()
     {
+        slots = slotHolder.GetComponentsInChildren<Slot>();
+
         playerItems = GameManager.Instance.player.GetComponent<PlayerItems>();
 
         // 아이템 변경 이벤트 구독
-        playerItems.OnItemsChanged += UpdateInventoryUI;
+        playerItems.OnInventoryItemsChanged += UpdateInventoryUI;
 
         int idx = 0;
         foreach (Slot slot in slots)
@@ -41,7 +42,7 @@ public class Inventory : DraggableUI
         // 인벤토리가 비활성화될 때 이벤트 구독 해제
         if (playerItems != null)
         {
-            playerItems.OnItemsChanged -= UpdateInventoryUI;
+            playerItems.OnInventoryItemsChanged -= UpdateInventoryUI;
         }
     }
 

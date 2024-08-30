@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private GameObject[] weapons;
-    private int currentWeaponIdx;
 
     private Rigidbody rb;
     private CapsuleCollider cc;

@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-public class Slot : MonoBehaviour, IPointerUpHandler
+public class Slot : MonoBehaviour
 {
     public int slotNum;
     public Item item;
@@ -14,8 +14,9 @@ public class Slot : MonoBehaviour, IPointerUpHandler
     public int itemCount;
     public TextMeshProUGUI itemCountText;
 
-    public void UpdateSlotUI()
+    public virtual void UpdateSlotUI()
     {
+        if (item == null) return;
         itemIcon.sprite = item.itemImage;
         itemIcon.gameObject.SetActive(true);
         itemCountText.text = itemCount.ToString();
@@ -31,7 +32,7 @@ public class Slot : MonoBehaviour, IPointerUpHandler
         itemIcon.gameObject.SetActive(false);
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public void OnClickButton()
     {
         if (item == null) return;
         item.UseItem();

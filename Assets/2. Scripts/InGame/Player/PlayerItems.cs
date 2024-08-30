@@ -5,14 +5,17 @@ using UnityEngine;
 
 public class PlayerItems : MonoBehaviour
 {
-    public Dictionary<Item, int> items;
-
     // 아이템이 추가되거나 제거될 때 발생하는 이벤트
-    public event Action OnItemsChanged;
+    public event Action OnInventoryItemsChanged;
+    public event Action OnEquipmentItemsChanged;
+
+    public Dictionary<Item, int> items; // 아이템, 개수
+    public Dictionary<ItemType, Item> equipments; // 부위, 아이템
 
     private void Awake()
     {
         items = new Dictionary<Item, int>();
+        equipments = new Dictionary<ItemType, Item>();
     }
 
     public void InsertItem(Item item)
@@ -27,7 +30,14 @@ public class PlayerItems : MonoBehaviour
         }
 
         // 이벤트 호출
-        OnItemsChanged?.Invoke();
+        OnInventoryItemsChanged?.Invoke();
+    }
+
+    public void EquipItem(ItemType type, Item item)
+    {
+        equipments[type] = item;
+
+        OnEquipmentItemsChanged?.Invoke();
     }
 
     public void RemoveItem(Item item)
@@ -43,7 +53,17 @@ public class PlayerItems : MonoBehaviour
             }
 
             // 이벤트 호출
-            OnItemsChanged?.Invoke();
+            OnInventoryItemsChanged?.Invoke();
+        }
+    }
+
+    public void UnequipItem(ItemType type)
+    {
+        if(equipments.ContainsKey(type))
+        {
+            equipments.Remove(type);
+
+            OnEquipmentItemsChanged?.Invoke();
         }
     }
 }
