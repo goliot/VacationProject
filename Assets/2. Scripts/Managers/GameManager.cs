@@ -23,18 +23,25 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         UIInputHandler.OnInventoryPressed += OpenInventory;
+        UIInputHandler.OnEquipmentPressed += OpenEquipment;
         UIInputHandler.OnClosePressed += CloseUI;
     }
 
     private void OnDisable()
     {
         UIInputHandler.OnInventoryPressed -= OpenInventory;
+        UIInputHandler.OnEquipmentPressed -= OpenEquipment;
         UIInputHandler.OnClosePressed -= CloseUI;
     }
 
     private void OpenInventory()
     {
         uiManager.Inventory();
+    }
+
+    private void OpenEquipment()
+    {
+        uiManager.Equipment();
     }
 
     private void CloseUI()

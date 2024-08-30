@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Slot_Equipments : Slot
 {
@@ -15,8 +16,15 @@ public class Slot_Equipments : Slot
 
     public override void UpdateSlotUI()
     {
-        itemIcon.sprite = item.itemImage;
-        itemIcon.gameObject.SetActive(true);
+        if (item != null)
+        {
+            itemIcon.gameObject.SetActive(true);
+            itemIcon.sprite = item.itemImage;
+        }
+        else
+        {
+            RemoveSlot();
+        }
     }
 
     public void OnClick()
@@ -24,5 +32,7 @@ public class Slot_Equipments : Slot
         //TODO : 버튼 클릭 로직 재정의
         if (item == null) return;
         Debug.Log("Slot onpointerup");
+
+        GameManager.Instance.player.GetComponent<PlayerItems>().UnequipItem(itemType);
     }
 }

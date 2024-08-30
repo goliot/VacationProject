@@ -389,6 +389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiList:
   - {fileID: 8361953326742856930, guid: aad3a3a95842c2548806d84d0086a710, type: 3}
+  - {fileID: 7611807754197694284, guid: be43970fd4de0114d8325caf869c255c, type: 3}
   canvas: {fileID: 994963131}
 --- !u!114 &642522192
 MonoBehaviour:

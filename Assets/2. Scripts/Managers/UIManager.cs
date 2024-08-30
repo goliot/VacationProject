@@ -41,6 +41,32 @@ public class UIManager : MonoBehaviour
         createdInventory.GetComponent<InventoryUI>().UpdateInventoryUI(); // 인벤토리 초기화
     }
 
+    public void Equipment()
+    {
+        GameObject EquipmentPrefab = FindUI("EquipmentUI");
+        if (EquipmentPrefab == null)
+        {
+            Debug.LogWarning("Equipment UI 프리팹을 찾을 수 없습니다.");
+            return;
+        }
+
+        // 인스턴스화된 오브젝트가 uiSet에 있는지 확인
+        /*foreach (GameObject ui in uiSet)
+        {
+            if (ui.name == inventoryPrefab.name + "(Clone)" && ui.activeSelf)
+            {
+                // UI가 이미 화면에 있는 경우
+                return;
+            }
+        }*/
+
+        // UI가 화면에 없으면 생성
+        GameObject createdInventory = Instantiate(EquipmentPrefab, canvas);
+        uiStack.Push(createdInventory);
+        uiSet.Add(createdInventory);
+        createdInventory.GetComponent<EquipmentsUI>().UpdateEquipmentUI(); // 인벤토리 초기화
+    }
+
     public void CloseUI()
     {
         if (uiStack.Count > 0)

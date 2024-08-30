@@ -59,6 +59,10 @@ public class InventoryUI : DraggableUI
                 idx++;
             }
         }
+        for(int i=idx; i<slots.Length; i++)
+        {
+            slots[i].RemoveSlot();
+        }
     }
 
     public void ClearSlots()

@@ -4,8 +4,10 @@ using UnityEngine.SceneManagement;
 public class UIInputHandler : MonoBehaviour
 {
     public delegate void InventoryAction();
+    public delegate void EquipmentAction();
     public static event InventoryAction OnClosePressed;
     public static event InventoryAction OnInventoryPressed;
+    public static event EquipmentAction OnEquipmentPressed;
 
     private void OnGUI()
     {
@@ -22,6 +24,10 @@ public class UIInputHandler : MonoBehaviour
         if(e.isKey && e.type == EventType.KeyDown && e.keyCode == KeyCode.Escape)
         {
             OnClosePressed?.Invoke();
+        }
+        if(e.isKey && e.type == EventType.KeyDown && e.keyCode == KeyCode.E)
+        {
+            OnEquipmentPressed?.Invoke();
         }
     }
 }

@@ -34,6 +34,11 @@ public class EquipmentsUI : DraggableUI
                 slot.item = playerItems.equipments[slot.itemType];
                 slot.UpdateSlotUI();
             }
+            else
+            {
+                slot.item = null;
+                slot.UpdateSlotUI();
+            }
         }
     }
 }

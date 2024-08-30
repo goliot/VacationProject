@@ -278,7 +278,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6856616233343678227}
         m_TargetAssemblyTypeName: Slot_Equipments, Assembly-CSharp
-        m_MethodName: OnClickButton
+        m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

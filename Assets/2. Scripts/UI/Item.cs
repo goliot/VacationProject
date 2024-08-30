@@ -39,7 +39,8 @@ public class Item : MonoBehaviour
         else if (IsInEquipmentRange(itemType))
         {
             isEquipped = true;
-            playerItems.equipments[itemType] = this;
+            playerItems.EquipItem(itemType, this);
+            playerItems.RemoveItem(this); //인벤토리에서 삭제
         }
     }
 

@@ -61,6 +61,7 @@ public class PlayerItems : MonoBehaviour
     {
         if(equipments.ContainsKey(type))
         {
+            InsertItem(equipments[type]);
             equipments.Remove(type);
 
             OnEquipmentItemsChanged?.Invoke();
