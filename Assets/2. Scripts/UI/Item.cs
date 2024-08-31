@@ -32,16 +32,23 @@ public class Item : MonoBehaviour
         {
             if (itemEffect != null)
             {
-                itemEffect.ExecuteRole(); // 아이템 효과 실행
+                itemEffect.ExecuteEffect(); // 아이템 효과 실행
                 playerItems.RemoveItem(this);
             }
         }
         else if (IsInEquipmentRange(itemType))
         {
             isEquipped = true;
+            itemEffect.ExecuteEffect();
             playerItems.EquipItem(itemType, this);
             playerItems.RemoveItem(this); //인벤토리에서 삭제
         }
+    }
+
+    public void UnEquipItem()
+    {
+        isEquipped = false;
+        itemEffect.CancelEffect();
     }
 
     // Consumable 아이템인지 확인하는 메서드

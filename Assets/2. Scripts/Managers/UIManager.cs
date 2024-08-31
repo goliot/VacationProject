@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour
 
         // UI가 화면에 없으면 생성
         GameObject createdInventory = Instantiate(inventoryPrefab, canvas);
-        uiStack.Push(createdInventory);
+        //uiStack.Push(createdInventory);
         uiSet.Add(createdInventory);
         createdInventory.GetComponent<InventoryUI>().UpdateInventoryUI(); // 인벤토리 초기화
     }
@@ -62,7 +62,7 @@ public class UIManager : MonoBehaviour
 
         // UI가 화면에 없으면 생성
         GameObject createdInventory = Instantiate(EquipmentPrefab, canvas);
-        uiStack.Push(createdInventory);
+        //uiStack.Push(createdInventory);
         uiSet.Add(createdInventory);
         createdInventory.GetComponent<EquipmentsUI>().UpdateEquipmentUI(); // 인벤토리 초기화
     }

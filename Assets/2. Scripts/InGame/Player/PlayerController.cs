@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Xml;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
@@ -28,6 +29,10 @@ public class PlayerController : MonoBehaviour
 
     public PlayerData playerData;
 
+    [Header("# ApplyStat")]
+    public float applyAtk;
+    public float atkItemBonus;
+
     [Header("Camera")]
     public CameraMove cameraMove;  // 카메라 움직임 스크립트를 참조합니다.
 
@@ -42,6 +47,7 @@ public class PlayerController : MonoBehaviour
     {
         LoadXML(xmlFileName);
         applySpeed = playerData.speed;
+        applyAtk = playerData.attack;
         jumpCount = 2;
         isDead = false;
     }
@@ -70,6 +76,11 @@ public class PlayerController : MonoBehaviour
             playerData.attackRange = float.Parse(node.SelectSingleNode("attackRange").InnerText);
             playerData.attackSpeed = float.Parse(node.SelectSingleNode("attackSpeed").InnerText);
         }
+    }
+
+    public void UpdateStatByItem()
+    {
+        applyAtk += atkItemBonus;
     }
 
     private void Update()

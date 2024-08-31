@@ -72,4 +72,9 @@ public class InventoryUI : DraggableUI
             slot.RemoveSlot();
         }
     }
+
+    public void OnClickCloseBtn()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -16,7 +16,7 @@ public class PlayerAttackCollision : MonoBehaviour
     {
         if (other.CompareTag("Minion"))
         {
-            other.GetComponent<MinionController>().TakeDamage(playerController.playerData.attack);
+            other.GetComponent<MinionController>().TakeDamage(playerController.applyAtk);
         }
     }
 

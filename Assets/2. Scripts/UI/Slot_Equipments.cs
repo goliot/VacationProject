@@ -33,6 +33,7 @@ public class Slot_Equipments : Slot
         if (item == null) return;
         Debug.Log("Slot onpointerup");
 
+        item.UnEquipItem();
         GameManager.Instance.player.GetComponent<PlayerItems>().UnequipItem(itemType);
     }
 }

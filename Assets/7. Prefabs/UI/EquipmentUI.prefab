@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4529999557755126921}
   - component: {fileID: 7472192949888134718}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: AtkText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -336,13 +336,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7611807754197694284}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 580586289115661085}
+        m_TargetAssemblyTypeName: EquipmentsUI, Assembly-CSharp
+        m_MethodName: OnClickCloseBtn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -437,7 +437,7 @@ GameObject:
   - component: {fileID: 7084522707007792018}
   - component: {fileID: 9113900367129199907}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: LevelText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 3103624434717448381}
   - component: {fileID: 6554479291709927536}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: MaxHpText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -814,6 +814,10 @@ MonoBehaviour:
   - {fileID: 9000890961094852567}
   - {fileID: 7310712311783517596}
   - {fileID: 7034993447658710877}
+  levelText: {fileID: 9113900367129199907}
+  maxHpText: {fileID: 6554479291709927536}
+  atkText: {fileID: 7472192949888134718}
+  armorText: {fileID: 706091609559059228}
 --- !u!1 &7934219273983749246
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,7 +984,7 @@ GameObject:
   - component: {fileID: 5944574884293051445}
   - component: {fileID: 706091609559059228}
   m_Layer: 5
-  m_Name: Text (TMP) (2)
+  m_Name: ArmorText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1350,7 +1354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4570551315821813378, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: m_Name
-      value: SlotEquipment (3)
+      value: GloveSlot
       objectReference: {fileID: 0}
     - target: {fileID: 6856616233343678227, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: itemType
@@ -1471,7 +1475,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4570551315821813378, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: m_Name
-      value: SlotEquipment (2)
+      value: ArmorSlot
       objectReference: {fileID: 0}
     - target: {fileID: 6856616233343678227, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: itemType
@@ -1592,7 +1596,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4570551315821813378, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: m_Name
-      value: SlotEquipment (1)
+      value: RingSlot
       objectReference: {fileID: 0}
     - target: {fileID: 6856616233343678227, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: itemType
@@ -1713,7 +1717,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4570551315821813378, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: m_Name
-      value: SlotEquipment (4)
+      value: ShoeSlot
       objectReference: {fileID: 0}
     - target: {fileID: 6856616233343678227, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: itemType
@@ -1834,7 +1838,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4570551315821813378, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: m_Name
-      value: SlotEquipment (5)
+      value: HelmetSlot
       objectReference: {fileID: 0}
     - target: {fileID: 6856616233343678227, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: itemType
@@ -1955,7 +1959,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4570551315821813378, guid: ad90822910d18904fbfc81e887715371, type: 3}
       propertyPath: m_Name
-      value: SlotEquipment
+      value: WeaponSlot
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
