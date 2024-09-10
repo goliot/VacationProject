@@ -24,7 +24,7 @@ public class Item : MonoBehaviour
     public ItemEffect itemEffect;  // 여기에 ScriptableObject를 할당
     public bool isEquipmentItem = false;
 
-    private bool canPickUpThis = false;
+    public bool canPickUpThis = false;
 
     private void Awake()
     {
@@ -65,7 +65,7 @@ public class Item : MonoBehaviour
         return itemType == ItemType.Consumable;
     }
 
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
@@ -83,9 +83,9 @@ public class Item : MonoBehaviour
         {
             canPickUpThis = false;
         }
-    }
+    }*/
 
-    public void MoveToInventory(PlayerItems player)
+    public void PickUp(PlayerItems player)
     {
         if (canPickUpThis)
         {

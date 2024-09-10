@@ -10,6 +10,7 @@ TagManager:
   - CheckPoint
   - Minion
   - FinalPoint
+  - Item
   layers:
   - Default
   - TransparentFX

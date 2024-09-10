@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -8031056410409440513}
   m_Layer: 0
   m_Name: BasicSword
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,3 +101,5 @@ MonoBehaviour:
   itemName: BasicSword
   itemImage: {fileID: 21300000, guid: 719c2201c2f5f6c4aafffaeb5abdf5f9, type: 3}
   itemEffect: {fileID: 11400000, guid: 947e463ae152be74a9fe7012484b68ab, type: 2}
+  isEquipmentItem: 0
+  canPickUpThis: 0
