@@ -17,13 +17,25 @@ public class Slot : MonoBehaviour
     public virtual void UpdateSlotUI()
     {
         if (item == null) return;
-        itemIcon.sprite = item.itemImage;
-        itemIcon.gameObject.SetActive(true);
-        itemCountText.text = itemCount.ToString();
-        if(itemCount <= 0)
+        else
         {
-            RemoveSlot();
+            itemIcon.sprite = item.itemImage;
+            itemIcon.gameObject.SetActive(true);
+            itemCountText.text = itemCount.ToString();
+            if (itemCount <= 0)
+            {
+                RemoveSlot();
+            }
         }
+
+        //if(item.isEquipmentItem)
+        //{
+        //    canDrag = true;
+        //}
+        //else
+        //{
+        //    canDrag = false;
+        //}
     }
 
     public void RemoveSlot()
@@ -36,16 +48,6 @@ public class Slot : MonoBehaviour
     {
         if (item == null) return;
         item.UseItem();
-
-        // item이 딕셔너리에 존재하는지 확인
-        /*if (GameManager.Instance.player.GetComponent<PlayerItems>().items.ContainsKey(item))
-        {
-            itemCount = GameManager.Instance.player.GetComponent<PlayerItems>().items[item];
-        }
-        else
-        {
-            itemCount = 0;  // item이 없으면 itemCount를 0으로 설정
-        }*/
 
         UpdateSlotUI();
     }

@@ -190,6 +190,10 @@ public class PlayerController : MonoBehaviour
         playerAnimator.OnComboAttack();
     }
 
+    private void PickUpItem()
+    {
+
+    }
 
     public void TakeDamage(float damage)
     {

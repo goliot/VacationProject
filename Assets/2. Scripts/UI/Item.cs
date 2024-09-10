@@ -22,6 +22,14 @@ public class Item : MonoBehaviour
     public string itemName;
     public Sprite itemImage;
     public ItemEffect itemEffect;  // 여기에 ScriptableObject를 할당
+    public bool isEquipmentItem = false;
+
+    private bool canPickUpThis = false;
+
+    private void Awake()
+    {
+        isEquipmentItem = IsEquipment(itemType);
+    }
 
     // 아이템을 사용하는 메서드
     public void UseItem()
@@ -36,7 +44,7 @@ public class Item : MonoBehaviour
                 playerItems.RemoveItem(this);
             }
         }
-        else if (IsInEquipmentRange(itemType))
+        else if (isEquipmentItem)
         {
             isEquipped = true;
             itemEffect.ExecuteEffect();
@@ -61,7 +69,27 @@ public class Item : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            other.GetComponent<PlayerItems>().InsertItem(this);
+            canPickUpThis = true;
+
+
+            other.gameObject.GetComponent<PlayerItems>().InsertItem(this);
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.tag == "Player")
+        {
+            canPickUpThis = false;
+        }
+    }
+
+    public void MoveToInventory(PlayerItems player)
+    {
+        if (canPickUpThis)
+        {
+            player.InsertItem(this);
             gameObject.SetActive(false);
         }
     }
@@ -83,7 +111,7 @@ public class Item : MonoBehaviour
     }
 
     // ItemType이 Equipment 범위에 있는지 확인하는 메서드
-    public static bool IsInEquipmentRange(ItemType itemType)
+    public static bool IsEquipment(ItemType itemType)
     {
         return itemType switch
         {

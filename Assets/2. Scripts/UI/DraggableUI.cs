@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,6 +8,7 @@ public abstract class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandl
     private CanvasGroup canvasGroup;
     private Canvas canvas;
     private Vector2 dragOffset;
+    public bool canDrag = true;
 
     protected virtual void Awake()
     {
@@ -17,6 +19,8 @@ public abstract class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (!canDrag) return;
+
         // 드래그 시작 시
         if (canvasGroup != null)
         {
@@ -38,6 +42,7 @@ public abstract class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!canDrag) return;
         // 드래그 중
         if (canvas != null && rectTransform != null)
         {
@@ -54,6 +59,7 @@ public abstract class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!canDrag) return;
         // 드래그 종료 시
         if (canvasGroup != null)
         {
